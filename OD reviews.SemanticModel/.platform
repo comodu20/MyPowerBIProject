@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "OD reviews"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "2af2f535-c0a0-4782-8f8a-2cbdbf72035c"
+  }
+}

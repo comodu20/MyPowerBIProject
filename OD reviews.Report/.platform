@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "OD reviews"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8c7f88bf-5c62-4405-b63f-31df4c5fa6ce"
+  }
+}

@@ -1,0 +1,21 @@
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Power BI Project specific ignores
+.pbit
+.pbix
+.ds.json
+.ds.yaml
+.tmp
+.cache
+profile.json
+/.vscode/
+
+
+# Operating System generated files
+.DS_Store
+Thumbs.db
+
+# VS Code specific ignores (if not already handled by a global .gitignore)
+.vscode/settings.json
+.vscode/*.code-workspace

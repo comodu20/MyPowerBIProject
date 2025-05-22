@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "OPPD Referral DashBoard"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "dbfd739c-440a-432c-889f-f66eba0f88e1"
+  }
+}
