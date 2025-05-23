@@ -57,23 +57,23 @@
 <body>
 
     <div class="navigation">
-        <button onclick="showDashboard('Dashboard1')" class="active">Call centre dashboard</button>
-        <button onclick="showDashboard('Dashboard2')">Referrals dashboard</button>
-        <button onclick="showDashboard('Dashboard3')">Reviews Dashboard</button>
+        <button onclick="showDashboard('CallCentreDashboard')" class="active">Call Centre Dashboard</button>
+        <button onclick="showDashboard('ReferralsDashboard')">Referrals dashboard</button>
+        <button onclick="showDashboard('ReviewsDashboard')">Reviews Dashboard</button>
     </div>
 
     <div class="dashboard-container">
-        <iframe id="Call centre dashboard" class="active"
+        <iframe id="CallCentreDashboard" class="active"
             src="https://app.powerbi.com/view?r=eyJrIjoiMTc0NmI0YTItODEwNi00NmFlLWI4M2ItNTg3M2E4OWE4OWFkIiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
             allowFullScreen="true">
         </iframe>
 
-        <iframe id="Referrals dashboard"
+        <iframe id="ReferralsDashboard"
             src="https://app.powerbi.com/view?r=eyJrIjoiNzdlZDBiZjYtNjg4NC00MzM0LTkxNWMtOWY3NzY2ZDIzYTMyIiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
             allowFullScreen="true">
         </iframe>
 
-        <iframe id="Reviews Dashboard"
+        <iframe id="ReviewsDashboard"
             src="https://app.powerbi.com/view?r=eyJrIjoiMTRhMTgyNzktN2Q3Yi00ZGY2LWI2ODUtZmE1NDI5NjAxNzM2IiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
             allowFullScreen="true">
         </iframe>
@@ -98,9 +98,7 @@
             event.target.classList.add('active'); // 'event.target' refers to the clicked button
         }
 
-        // Initialize the first dashboard to be visible on load
-        // You might want to explicitly call showDashboard('dashboard1') here
-        // or rely on the initial 'active' classes as set in the HTML.
+
     </script>
 
 </body>
