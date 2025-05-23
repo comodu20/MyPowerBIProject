@@ -1,8 +1,8 @@
 📊 My Interactive Power BI Dashboard Portfolio
-Welcome to my interactive Power BI Dashboard Portfolio! This repository showcases a collection of my data visualization projects, allowing you to explore live, interactive dashboards directly in your browser.
+Welcome to my interactive Power BI Dashboard Portfolio! This repository showcases a collection of my data visualisation projects, allowing you to explore live, interactive dashboards directly in your browser.
 
 About This Portfolio
-This portfolio is hosted using GitHub Pages, providing a seamless web experience. Each dashboard is embedded into its own HTML page, and a central navigation system allows you to effortlessly switch between different projects. The goal is to offer a dynamic and user-friendly way to demonstrate my skills in data analysis, visualisation, and storytelling with Power BI.
+This portfolio is hosted using GitHub Pages, providing a seamless web experience. Each dashboard is embedded into its HTML page, and a central navigation system allows you to switch between different projects effortlessly. The goal is to offer a dynamic and user-friendly way to demonstrate my skills in data analysis, visualisation, and storytelling with Power BI.
 
 🚀 View the Live Portfolio
 You can access the full interactive portfolio here:
@@ -35,4 +35,4 @@ GitHub Pages: For hosting the static website and making the portfolio publicly a
 I'm always open to discussing data science, analytics, and new opportunities. Feel free to connect!
 
 LinkedIn: [Morgan Omodu](https://www.linkedin.com/in/morganomodu/)
-Email: [Reach me here](omodumorgan@gmail.com)
+Email: [Reach me here](mailto:omodumorgan@gmail.com)
