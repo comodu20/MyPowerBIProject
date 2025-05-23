@@ -1,0 +1,40 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["OPPD_Referrals_in_period_front_door","Risks count","Requested support count","Person IDs","Step IDS","DataRefresh"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.143.878.0 (25.05)+b20aa3b866ec1b70879135a4e60e4b1301c75b21
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table OPPD_Referrals_in_period_front_door
+ref table DateTableTemplate_5d0f093b-cbe9-4fcc-88e8-f4d641ad59ca
+ref table LocalDateTable_5fa70ccb-759a-4b22-a05f-a8064fdc9e8a
+ref table LocalDateTable_0397bbd1-d74c-4e15-954d-c4be4d48d1cf
+ref table LocalDateTable_a9c274ea-2dce-428b-ba45-0d911aa76f88
+ref table LocalDateTable_8c18cfb8-7906-493b-b703-1cb1dc54854a
+ref table 'Risks count'
+ref table LocalDateTable_74e04075-8dda-4a95-a71c-07f2118266f7
+ref table LocalDateTable_1b5d0e4b-35b9-4dfd-b4ab-d7c5ce26769d
+ref table LocalDateTable_3c78acec-9109-4910-bda0-27012cf3076e
+ref table 'Requested support count'
+ref table LocalDateTable_8780d455-cb96-4ea4-9ac2-c31b9fe1d11c
+ref table LocalDateTable_8ed9ec37-932b-4323-b758-e68a34588d2e
+ref table LocalDateTable_37d030a6-d299-4509-8735-f848f8585de9
+ref table 'Person IDs'
+ref table 'Step IDS'
+ref table LocalDateTable_1f84885b-f0b8-4d91-a173-767ffae12d65
+ref table LocalDateTable_98c1748f-4f5e-4b29-b134-a52086e4bf91
+ref table DataRefresh
+ref table LocalDateTable_b100fd1a-4bb2-478b-a359-b1a476afb772
+ref table LocalDateTable_03d1c6a5-8a43-4420-8d74-58463b66935f
+
+ref cultureInfo en-GB
+

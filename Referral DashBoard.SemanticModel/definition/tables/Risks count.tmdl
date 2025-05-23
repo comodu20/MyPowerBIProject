@@ -1,0 +1,121 @@
+table 'Risks count'
+	lineageTag: e2b735fa-e6e6-4513-87cb-8a897281ccdd
+
+	column 'Person ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 5ae2115e-dfcb-42bd-b9b0-4e1705de3bac
+		summarizeBy: none
+		sourceColumn: Person ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 36e14d7f-f6ec-4588-96bf-469d61c95178
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incoming On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f8b38939-630e-439c-92b4-164581deb02d
+		summarizeBy: none
+		sourceColumn: Incoming On
+
+		variation Variation
+			isDefault
+			relationship: 1a9dabf0-ba81-4703-b335-03b08ff20784
+			defaultHierarchy: LocalDateTable_74e04075-8dda-4a95-a71c-07f2118266f7.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Started On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 274897ad-1ef2-4d85-8f05-90cf25f8175f
+		summarizeBy: none
+		sourceColumn: Started On
+
+		variation Variation
+			isDefault
+			relationship: 9bd069bc-02e6-4a75-9281-82f5790de415
+			defaultHierarchy: LocalDateTable_1b5d0e4b-35b9-4dfd-b4ab-d7c5ce26769d.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Completed On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ae614a2d-9ea6-452a-b4ce-b69f9c714259
+		summarizeBy: none
+		sourceColumn: Completed On
+
+		variation Variation
+			isDefault
+			relationship: 153e0633-b49c-45c6-aa55-9a393f1fdf8f
+			defaultHierarchy: LocalDateTable_3c78acec-9109-4910-bda0-27012cf3076e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Risks in the Property'
+		dataType: string
+		lineageTag: 279d0d3e-b6c3-4400-bb53-3305e996c9a1
+		summarizeBy: none
+		sourceColumn: Risks in the Property
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dup_check
+		dataType: string
+		lineageTag: 8e783003-47d9-474c-aad2-09e01f129e0c
+		summarizeBy: none
+		sourceColumn: Dup_check
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action'
+		dataType: string
+		lineageTag: 1aa59b76-a70a-4a49-9425-58fb77568fce
+		summarizeBy: none
+		sourceColumn: Next Action
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action (Step Type)'
+		dataType: string
+		lineageTag: d3a2e6fb-a705-4726-ac60-b2e0d4ef52c3
+		summarizeBy: none
+		sourceColumn: Next Action (Step Type)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action Reason'
+		dataType: string
+		lineageTag: edebac6b-c992-42bb-9518-db34416a29c0
+		summarizeBy: none
+		sourceColumn: Next Action Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Risks count' = m
+		mode: import
+		source =
+				let
+				    Source = OPPD_Referrals_in_period_front_door,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Person ID", "Step ID", "Incoming On", "Started On", "Completed On", "Risks in the Property", "Next Action", "Next Action (Step Type)", "Next Action Reason"}),
+				    #"Split Column by Delimiter" = Table.ExpandListColumn(Table.TransformColumns(#"Removed Other Columns", {{"Risks in the Property", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), let itemType = (type nullable text) meta [Serialized.Text = true] in type {itemType}}}), "Risks in the Property"),
+				    #"Filtered Rows" = Table.SelectRows(#"Split Column by Delimiter", each ([Risks in the Property] <> null and [Risks in the Property] <> " ")),
+				    #"Trimmed Text" = Table.TransformColumns(#"Filtered Rows",{{"Risks in the Property", Text.Trim, type text}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Trimmed Text", "Dup_check", each Text.Combine({[Risks in the Property], Text.From([Person ID], "en-GB")}, ","), type text),
+				    #"Removed Duplicates" = Table.Distinct(#"Inserted Merged Column", {"Dup_check"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,24 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["PQin_2","Main","Data Refresh"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.143.878.0 (25.05)+b20aa3b866ec1b70879135a4e60e4b1301c75b21
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode"]
+
+ref table Main
+ref table DateTableTemplate_ae75fcca-5220-4138-9e8f-c93e223dee97
+ref table LocalDateTable_2886313a-b388-49a3-a8c4-2fa13ac5ff71
+ref table 'Data Refresh'
+ref table LocalDateTable_1fe4404f-40f0-4d42-9b79-f2919780301f
+
+ref cultureInfo en-GB
+

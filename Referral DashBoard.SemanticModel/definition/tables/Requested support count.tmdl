@@ -1,0 +1,121 @@
+table 'Requested support count'
+	lineageTag: 6f9a9a82-9e10-4a93-a6ef-183fefdd1a53
+
+	column 'Person ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 070bc5d5-3798-4a7d-ab90-0d10c4b38d7b
+		summarizeBy: none
+		sourceColumn: Person ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: ac93685c-3977-4a0d-9f1a-bac37a70fd57
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incoming On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 1aa50c08-5d40-47e4-8ba2-40d5ed462017
+		summarizeBy: none
+		sourceColumn: Incoming On
+
+		variation Variation
+			isDefault
+			relationship: 4bd1cb96-5723-4ff2-963d-dbb9584e46ea
+			defaultHierarchy: LocalDateTable_8780d455-cb96-4ea4-9ac2-c31b9fe1d11c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Started On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 674ebd81-ab29-41a1-80ff-0418b83fb908
+		summarizeBy: none
+		sourceColumn: Started On
+
+		variation Variation
+			isDefault
+			relationship: b296a7e3-86c7-4e15-80f2-180d0947247e
+			defaultHierarchy: LocalDateTable_8ed9ec37-932b-4323-b758-e68a34588d2e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Completed On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fdc2e872-f24e-4608-8719-8709405f83e4
+		summarizeBy: none
+		sourceColumn: Completed On
+
+		variation Variation
+			isDefault
+			relationship: c6de253d-43cd-4ddd-9395-2b47ba3e5f52
+			defaultHierarchy: LocalDateTable_37d030a6-d299-4509-8735-f848f8585de9.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Requested Support'
+		dataType: string
+		lineageTag: ed3c003e-5dde-41ad-829d-52f2b8de69ad
+		summarizeBy: none
+		sourceColumn: Requested Support
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dup_check
+		dataType: string
+		lineageTag: 225b1800-537a-4720-a26b-b2104ddc4336
+		summarizeBy: none
+		sourceColumn: Dup_check
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action'
+		dataType: string
+		lineageTag: a18f15cb-bf00-48ef-bc82-55c33faef92d
+		summarizeBy: none
+		sourceColumn: Next Action
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action (Step Type)'
+		dataType: string
+		lineageTag: cf9ccb19-e725-455e-b0f4-237633e8986c
+		summarizeBy: none
+		sourceColumn: Next Action (Step Type)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action Reason'
+		dataType: string
+		lineageTag: 11f88f87-8e9b-4a78-8bb8-f06e9a722de7
+		summarizeBy: none
+		sourceColumn: Next Action Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Requested support count' = m
+		mode: import
+		source =
+				let
+				    Source = OPPD_Referrals_in_period_front_door,
+				    #"Removed Other Columns" = Table.SelectColumns(Source,{"Person ID", "Step ID", "Incoming On", "Started On", "Completed On", "Requested Support", "Next Action", "Next Action (Step Type)", "Next Action Reason"}),
+				    #"Split Column by Delimiter" = Table.ExpandListColumn(Table.TransformColumns(#"Removed Other Columns", {{"Requested Support", Splitter.SplitTextByDelimiter(",", QuoteStyle.Csv), let itemType = (type nullable text) meta [Serialized.Text = true] in type {itemType}}}), "Requested Support"),
+				    #"Filtered Rows" = Table.SelectRows(#"Split Column by Delimiter", each ([Requested Support] <> null and [Requested Support] <> " ")),
+				    #"Trimmed Text" = Table.TransformColumns(#"Filtered Rows",{{"Requested Support", Text.Trim, type text}}),
+				    #"Inserted Merged Column" = Table.AddColumn(#"Trimmed Text", "Dup_check", each Text.Combine({[Requested Support], Text.From([Person ID], "en-GB")}, ","), type text),
+				    #"Removed Duplicates" = Table.Distinct(#"Inserted Merged Column", {"Dup_check"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

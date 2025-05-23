@@ -1,0 +1,25 @@
+relationship cdcf3699-c34d-437e-ba12-c6c703a9de24
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Data Refresh'.Date
+	toColumn: LocalDateTable_b9ea4723-d1f3-4f07-a179-0a431403973b.Date
+
+relationship effd7844-2d2a-48ae-8a07-fc67ffab856b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Use_summary sheet'.'Next Rev:Last Comp.Ass/Rev+1yr'
+	toColumn: LocalDateTable_298eee84-372a-4e48-9795-341589b70949.Date
+
+relationship 6eb199c5-ae60-4d4f-8d36-9ac5b09c81e8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Use_table.'Person DoB'
+	toColumn: LocalDateTable_5c0f3688-3b9b-4317-8737-04daddb6abfb.Date
+
+relationship 16bdc9ef-dead-4795-9be5-ebdeeedabca9
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Use_summary sheet'.'Person DoB'
+	toColumn: LocalDateTable_ca07ab66-3e77-4c17-b405-4ec2457300ee.Date
+
+relationship 4190cb41-d0d3-4d42-8004-cb6e22ed0afe
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Data Refresh'.DateTime
+	toColumn: LocalDateTable_c0f5b4c3-502d-4d76-a0e5-9a5d52c7bfef.Date
+

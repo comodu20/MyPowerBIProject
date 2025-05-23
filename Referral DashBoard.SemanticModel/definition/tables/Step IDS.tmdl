@@ -1,0 +1,49 @@
+table 'Step IDS'
+	lineageTag: 9da383c4-e58a-4d5b-bce9-640d94fc162c
+
+	column 'Step ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 65458ffd-88fb-4ca3-865a-2fe15b4e8903
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Started On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 60558ae4-467a-4a1a-ba72-885dbb42cd40
+		summarizeBy: none
+		sourceColumn: Started On
+
+		variation Variation
+			isDefault
+			relationship: 1ff8a88e-0e1b-4002-bc65-b9e567c68337
+			defaultHierarchy: LocalDateTable_1f84885b-f0b8-4d91-a173-767ffae12d65.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Person ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: dfd74e7a-3c87-4c6e-aca6-81eb09ac35b6
+		summarizeBy: count
+		sourceColumn: Person ID
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Step IDS' = m
+		mode: import
+		source =
+				let
+				    Source = OPPD_Referrals_in_period_front_door,
+				    #"Removed Other Columns1" = Table.SelectColumns(Source,{"Person ID", "Step ID", "Started On"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns1", {"Step ID"})
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,289 @@
+table Use_table
+	lineageTag: 25828e8c-d6f9-449a-89d5-42b89a71ec94
+
+	measure 'Count active filters' = ```
+			
+			VAR Service_Area =IF(ISFILTERED(Use_table[Open Allocated Service Area]),1,0)
+			VAR Reviewed_or_Overdue =IF(ISFILTERED(Use_table[Overdue Review]),1,0)
+			VAR Open_All_Wrk_team = IF(ISFILTERED(Use_table[Open Allocated Worker Team]),1,0)
+			VAR Has_active_serv =IF(ISFILTERED(Use_table[Has Active Services]),1,0)
+			VAR Review_stat =IF(ISFILTERED(Use_table[Review Status]),1,0)
+			
+			VAR filter_count =
+			Service_Area+Reviewed_or_Overdue+Open_All_Wrk_team+Has_active_serv+Review_stat
+			
+			RETURN 
+			filter_count&" "
+			```
+		lineageTag: 14c2e838-bdee-45ef-9b7b-674d1f68caa6
+
+	measure 'Count active filters counter color' =
+			
+			IF([Count active filters]="0", "#558AC930", "#9C74BB50")
+		lineageTag: 2c74c008-c6a4-4920-8d09-2406cede619d
+
+	measure 'Count active filters button color' =
+			
+			IF([Count active filters]="0",
+			"#9C74BB","#000000")
+		lineageTag: 4f94f97f-db62-415b-93be-66741a10ad0e
+
+	measure 'counter color 2' =
+			
+			IF([Count active filters]="0", "#558AC930", "#00000")
+		lineageTag: 8eb1efce-7e0d-41fb-82c4-0e92ff8825b5
+
+	column 'Person ID'
+		dataType: string
+		lineageTag: 6a2a78b8-1eaf-4d92-b236-980a1f8378e7
+		summarizeBy: none
+		sourceColumn: Person ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Person Age'
+		dataType: string
+		lineageTag: 1de5baa4-bde0-470f-a6eb-c542b8ec03ca
+		summarizeBy: none
+		sourceColumn: Person Age
+
+		annotation SummarizationSetBy = Automatic
+
+	column Deceased/Alive
+		dataType: string
+		lineageTag: f8559562-4cb9-4e49-9c7e-bdf36ab29937
+		summarizeBy: none
+		sourceColumn: Deceased/Alive
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Open Allocated Team'
+		dataType: string
+		lineageTag: 009667d9-452f-4ff2-ba69-fdd7a3b5646d
+		summarizeBy: none
+		sourceColumn: Open Allocated Team
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Open Allocated Worker'
+		dataType: string
+		lineageTag: a4ad8d3d-7845-4a42-a064-d75ade3fcf8b
+		summarizeBy: none
+		sourceColumn: Open Allocated Worker
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Open Allocated Worker Team'
+		dataType: string
+		lineageTag: d3bfcd13-1fc4-4604-a4b3-1399e8866407
+		summarizeBy: none
+		sourceColumn: Open Allocated Worker Team
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Open Allocated Service Area'
+		dataType: string
+		lineageTag: 535be977-9229-42e0-8fbd-73dfc285c56c
+		summarizeBy: none
+		sourceColumn: Open Allocated Service Area
+
+		annotation SummarizationSetBy = Automatic
+
+	column Services
+		dataType: string
+		lineageTag: a53c3aae-805e-440e-ae4a-e7cfb21131ad
+		summarizeBy: none
+		sourceColumn: Services
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Service Start Date'
+		dataType: string
+		lineageTag: 801e4e19-c1be-48f6-95e7-aa1bf640f335
+		summarizeBy: none
+		sourceColumn: Service Start Date
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Performance group'
+		dataType: string
+		lineageTag: f912f438-a5db-477a-9647-ede04c3ca025
+		summarizeBy: none
+		sourceColumn: Performance group
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Has Active Services'
+		dataType: string
+		lineageTag: d9b3c8ae-937b-41ee-bf91-58055d6aad15
+		summarizeBy: none
+		sourceColumn: Has Active Services
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Overdue Review'
+		dataType: string
+		lineageTag: ac279748-d3e7-4f5e-aecb-56033d65c301
+		summarizeBy: none
+		sourceColumn: Overdue Review
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Review Status'
+		dataType: string
+		lineageTag: f279909b-6b12-408b-860c-314336e67cf9
+		summarizeBy: none
+		sourceColumn: Review Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Days Since Review Start'
+		dataType: double
+		formatString: 0
+		lineageTag: 6fbed702-eefc-42ca-b5e9-e351bd2ed40f
+		summarizeBy: sum
+		sourceColumn: Days Since Review Start
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column 'Days Until Planned Review'
+		dataType: double
+		lineageTag: 5e5ccf25-07df-4271-96d9-c95a6a1b3055
+		summarizeBy: sum
+		sourceColumn: Days Until Planned Review
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Date of Last Review'
+		dataType: string
+		lineageTag: 9fac4676-98c2-405e-b1cf-c41ed0a100c7
+		summarizeBy: none
+		sourceColumn: Date of Last Review
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Days Since Last Compld Ass/Rev'
+		dataType: double
+		lineageTag: 11e0f8d8-0ae9-44f0-bf47-ef2a976b051a
+		summarizeBy: sum
+		sourceColumn: Days Since Last Compld Ass/Rev
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Days Overdue'
+		dataType: double
+		formatString: 0
+		lineageTag: a8d61ac4-5fec-4434-8539-fd3904b42a0d
+		summarizeBy: sum
+		sourceColumn: Days Overdue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column 'All Service Types'
+		dataType: string
+		lineageTag: c36772a7-e234-4b26-8ddc-df6dadde3df4
+		summarizeBy: none
+		sourceColumn: All Service Types
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date of Last Comp Assess/Rev'
+		dataType: string
+		lineageTag: c7fc2270-5ebf-4405-b7cc-1e3db686fa21
+		summarizeBy: none
+		sourceColumn: Date of Last Comp Assess/Rev
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Person DoB'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 74f78628-2734-4f6a-a275-303ae782d9da
+		summarizeBy: none
+		sourceColumn: Person DoB
+
+		variation Variation
+			isDefault
+			relationship: 6eb199c5-ae60-4d4f-8d36-9ac5b09c81e8
+			defaultHierarchy: LocalDateTable_5c0f3688-3b9b-4317-8737-04daddb6abfb.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'In a placement?'
+		dataType: string
+		lineageTag: 071c021b-5820-48eb-81e7-261fc3e06d03
+		summarizeBy: none
+		sourceColumn: In a placement?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incoming\Started review StepID'
+		dataType: string
+		lineageTag: b4db094f-ec37-4cf8-aa06-7934260c27a1
+		summarizeBy: none
+		sourceColumn: Incoming\Started review StepID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incoming\Started Assessment ID'
+		dataType: double
+		lineageTag: 6334576c-fa13-42fe-b317-f47dd7c86c26
+		summarizeBy: count
+		sourceColumn: Incoming\Started Assessment ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Completed Review StepID'
+		dataType: double
+		lineageTag: 43cac14e-c19f-4b0b-84e9-fc94a20be201
+		summarizeBy: count
+		sourceColumn: Completed Review StepID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Filt_Open Allocated Worker Team'
+		dataType: string
+		lineageTag: 990ff083-a4da-42a5-b790-5e671ff6f0f9
+		summarizeBy: none
+		sourceColumn: Filt_Open Allocated Worker Team
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dummy_ID = IF(Use_table[Person ID]<>"",RIGHT(Use_table[Person ID],3))
+		lineageTag: 85745570-e990-4c2c-82af-9b2078884e97
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Use_table = m
+		mode: import
+		source =
+				let
+				    Source = LBS_V_PBI_ASC_OVERDUE_REVIEWS,
+				    #"Removed Columns" = Table.RemoveColumns(Source,{"Person Name", "Person Gender", "Age Band", "Date of Death", "Co-Worker", "Co-Worker Team", "Last Allocated Team", "Single Service Area", "Single Service Area Value", "Single Service Area Source", "Single Service Budget Area", "Single Service Budget Holder", "Timescale In Progress", "Diff Completed/Next Date", "Timescale Outstanding", "Timescale Outstanding Rank", "Last Review Completion Time", "Total Case Notes", "Funding type(s)", "Has Non Personal Budget", "Has Personal Budget", "Group Description", "Sub-group Description", "Next Action", "Last Review Type", "Date of Last Assessment", "Last Assessment Type", "Next Rev:Last Comp.Ass/Rev+1yr"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Person ID", type text}, {"Service Start Date", type text}, {"Date of Last Comp Assess/Rev", type text}, {"Date of Last Review", type text}, {"Incoming\Started review StepID", type text}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type",null,"Unallocated/Not recorded",Replacer.ReplaceValue,{"Open Allocated Team", "Open Allocated Worker Team", "Open Allocated Worker"}),
+				    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Person ID", Order.Ascending}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", {"Person ID"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Removed Duplicates", each ([Open Allocated Service Area] = "Mental Health" or [Open Allocated Service Area] = "OP and PD") and ([Services] <> "No Services" and [Services] <> "NRPF (obsolete)" and [Services] <> "NRPF, NRPF (obsolete)")),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Filtered Rows", "Open Allocated Worker Team", "Open Allocated Worker Team - Copy"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Duplicated Column",{{"Open Allocated Worker Team - Copy", "Filt_Open Allocated Worker Team"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

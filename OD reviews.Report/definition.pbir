@@ -3,7 +3,6 @@
   "datasetReference": {
     "byPath": {
       "path": "../OD reviews.SemanticModel"
-    },
-    "byConnection": null
+    }
   }
 }

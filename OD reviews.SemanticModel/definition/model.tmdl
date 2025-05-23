@@ -1,0 +1,32 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["LBS_V_PBI_ASC_OVERDUE_REVIEWS","Use_table","Use_summary sheet","MH","MH performance group diff SA","OPPD","OPPD performance group diff SA","SRC","Data Refresh","Use_NRPF","Use_No services","Use_summary sheet (2)"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.143.878.0 (25.05)+b20aa3b866ec1b70879135a4e60e4b1301c75b21
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DateTableTemplate_75a9b48e-8e42-420a-ab5e-3bb67a415fb3
+ref table Use_table
+ref table 'Data Refresh'
+ref table LocalDateTable_b9ea4723-d1f3-4f07-a179-0a431403973b
+ref table 'Use_summary sheet'
+ref table LocalDateTable_298eee84-372a-4e48-9795-341589b70949
+ref table LocalDateTable_5c0f3688-3b9b-4317-8737-04daddb6abfb
+ref table LocalDateTable_ca07ab66-3e77-4c17-b405-4ec2457300ee
+ref table LocalDateTable_c0f5b4c3-502d-4d76-a0e5-9a5d52c7bfef
+
+ref role MH
+ref role OPPD
+ref role PDQ
+
+ref cultureInfo en-GB
+

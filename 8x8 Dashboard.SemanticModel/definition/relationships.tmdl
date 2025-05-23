@@ -1,0 +1,10 @@
+relationship 4539073c-dd65-4442-a31b-c28cbe83421c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Main.'Time (Creation)'
+	toColumn: LocalDateTable_2886313a-b388-49a3-a8c4-2fa13ac5ff71.Date
+
+relationship e7b06913-4d5a-4cea-851f-56f24cffb684
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Data Refresh'.Date
+	toColumn: LocalDateTable_1fe4404f-40f0-4d42-9b79-f2919780301f.Date
+

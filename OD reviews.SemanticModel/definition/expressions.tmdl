@@ -1,0 +1,141 @@
+expression MH =
+		let
+		    Source = Use_table,
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Performance group] = "MH (inc Sub Misuse)")),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Open Allocated Team"}),
+		    #"Sorted Rows" = Table.Sort(#"Removed Columns",{{"Person ID", Order.Ascending}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Sorted Rows",{{"Date of Last Review", type text}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"Person ID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: 4461e859-c5b2-45cc-a673-2b47cae67aea
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'MH performance group diff SA' =
+		let
+		    Source = Use_table,
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Performance group] = "MH (inc Sub Misuse)")),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Open Allocated Team"}),
+		    #"Filtered Rows1" = Table.SelectRows(#"Removed Columns", each ([Open Allocated Service Area] <> "Mental Health")),
+		    #"Removed Duplicates" = Table.Distinct(#"Filtered Rows1", {"Person ID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: d3a78d0c-457d-4d59-b3ad-be9bbc674a91
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression OPPD =
+		let
+		    Source = Use_table,
+		    #"Filtered Rows" = Table.SelectRows(Source, each [Performance group] = "OPPD, etc"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Open Allocated Team"}),
+		    #"Sorted Rows" = Table.Sort(#"Removed Columns",{{"Person ID", Order.Ascending}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Sorted Rows",{{"Date of Last Review", type text}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"Person ID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: 50510797-56ab-4d3e-aab0-dc4264fbaa19
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'OPPD performance group diff SA' =
+		let
+		    Source = Use_table,
+		    #"Filtered Rows" = Table.SelectRows(Source, each [Performance group] = "OPPD, etc" and [Open Allocated Service Area] <> "OP and PD"),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Open Allocated Team"}),
+		    #"Removed Duplicates" = Table.Distinct(#"Removed Columns", {"Person ID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: 30f473d6-32d8-4b81-adda-cb1bff978702
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression SRC =
+		let
+		    Source = Use_table,
+		    #"Filtered Rows" = Table.SelectRows(Source, each ([Performance group] = "SRC")),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Open Allocated Team"}),
+		    #"Sorted Rows" = Table.Sort(#"Removed Columns",{{"Person ID", Order.Ascending}}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Sorted Rows",{{"Date of Last Review", type text}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"Person ID"})
+		in
+		    #"Removed Duplicates"
+	lineageTag: f9fc6493-aab1-4f3f-95d6-e5981228c770
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Use_NRPF =
+		let
+		    Source = LBS_V_PBI_ASC_OVERDUE_REVIEWS,
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Person Name", "Person Gender", "Age Band", "Date of Death", "Co-Worker", "Co-Worker Team", "Last Allocated Team", "Single Service Area", "Single Service Area Value", "Single Service Area Source", "Single Service Budget Area", "Single Service Budget Holder", "Timescale In Progress", "Diff Completed/Next Date", "Timescale Outstanding", "Timescale Outstanding Rank", "Last Review Completion Time", "Total Case Notes", "Funding type(s)", "Has Non Personal Budget", "Has Personal Budget", "Group Description", "Sub-group Description", "Next Action", "Last Review Type", "Date of Last Assessment", "Last Assessment Type", "Next Rev:Last Comp.Ass/Rev+1yr"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Person ID", type text}, {"Service Start Date", type text}, {"Date of Last Comp Assess/Rev", type text}, {"Date of Last Review", type text}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type",null,"Unallocated/Not recorded",Replacer.ReplaceValue,{"Open Allocated Team", "Open Allocated Worker Team", "Open Allocated Worker"}),
+		    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Person ID", Order.Ascending}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", {"Person ID"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Duplicates", each ([Services] = "Home Care, NRPF" or [Services] = "NRPF (obsolete)"))
+		in
+		    #"Filtered Rows"
+	lineageTag: 69f211bd-a9b9-4ba1-ba92-ebcb211e724c
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Use_No services' =
+		let
+		    Source = LBS_V_PBI_ASC_OVERDUE_REVIEWS,
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Person Name", "Person Gender", "Age Band", "Date of Death", "Co-Worker", "Co-Worker Team", "Last Allocated Team", "Single Service Area", "Single Service Area Value", "Single Service Area Source", "Single Service Budget Area", "Single Service Budget Holder", "Timescale In Progress", "Diff Completed/Next Date", "Timescale Outstanding", "Timescale Outstanding Rank", "Last Review Completion Time", "Total Case Notes", "Funding type(s)", "Has Non Personal Budget", "Has Personal Budget", "Group Description", "Sub-group Description", "Next Action", "Last Review Type", "Date of Last Assessment", "Last Assessment Type", "Next Rev:Last Comp.Ass/Rev+1yr"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Person ID", type text}, {"Service Start Date", type text}, {"Date of Last Comp Assess/Rev", type text}, {"Date of Last Review", type text}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type",null,"Unallocated/Not recorded",Replacer.ReplaceValue,{"Open Allocated Team", "Open Allocated Worker Team", "Open Allocated Worker"}),
+		    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Person ID", Order.Ascending}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", {"Person ID"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Duplicates", each ([Services] = "No Services"))
+		in
+		    #"Filtered Rows"
+	lineageTag: 41c93a47-8eb1-4302-8ae2-b315322d11df
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression LBS_V_PBI_ASC_OVERDUE_REVIEWS =
+		let
+		    Source = Oracle.Database("""swk-rep-db2.lbs.ad.southwark.gov.uk:1542/mosrep""", [HierarchicalNavigation=true]),
+		    FW = Source{[Schema="FW"]}[Data],
+		    LBS_V_PBI_ASC_OVERDUE_REVIEWS1 = FW{[Name="LBS_V_PBI_ASC_OVERDUE_REVIEWS"]}[Data]
+		in
+		    LBS_V_PBI_ASC_OVERDUE_REVIEWS1
+	lineageTag: 4c323572-e2ac-4eba-a0d9-a401fe1ecc16
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Use_summary sheet (2)' =
+		let
+		    Source = LBS_V_PBI_ASC_OVERDUE_REVIEWS,
+		    #"Removed Columns" = Table.RemoveColumns(Source,{"Person Name", "Date of Death", "Co-Worker", "Co-Worker Team", "Last Allocated Team", "Single Service Area", "Single Service Area Value", "Single Service Area Source", "Single Service Budget Area", "Single Service Budget Holder", "Timescale In Progress", "Diff Completed/Next Date", "Timescale Outstanding", "Timescale Outstanding Rank", "Last Review Completion Time", "Total Case Notes", "Funding type(s)", "Has Non Personal Budget", "Has Personal Budget", "Group Description", "Next Action", "Last Review Type", "Date of Last Assessment", "Last Assessment Type"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Person ID", type text}, {"Service Start Date", type text}, {"Date of Last Comp Assess/Rev", type text}, {"Date of Last Review", type text}, {"Person Age", Int64.Type}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type",null,"Unallocated/Not recorded",Replacer.ReplaceValue,{"Open Allocated Team", "Open Allocated Worker Team", "Open Allocated Worker"}),
+		    #"Sorted Rows" = Table.Sort(#"Replaced Value",{{"Person ID", Order.Ascending}}),
+		    #"Removed Duplicates" = Table.Distinct(#"Sorted Rows", {"Person ID"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Removed Duplicates", each ([Services] <> "No Services" and [Services] <> "NRPF (obsolete)"))
+		in
+		    #"Filtered Rows"
+	lineageTag: b03cea35-506d-449f-ab18-67ce25f22fc9
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

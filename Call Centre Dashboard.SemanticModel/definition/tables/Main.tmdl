@@ -1,0 +1,935 @@
+table Main
+	lineageTag: c9cc3a4c-6fe2-454d-abe5-b3ff1370e7de
+
+	measure Busiest_Day_monthly = ```
+			
+			VAR CurrentMonth = 
+			    SELECTEDVALUE(Main[Month Name])
+			VAR DayCounts = 
+			    ADDCOLUMNS(
+			        VALUES(Main[Day Name]),
+			        "TransactionCount",
+			        CALCULATE(COUNTA(Main[Transaction ID]), 
+			        Main[Month Name] = 
+			        CurrentMonth)
+			    )
+			VAR BusiestDay = 
+			    TOPN(
+			        1, 
+			        DayCounts,
+			        [TransactionCount], 
+			        DESC
+			    )
+			VAR BusiestDayName = 
+			    MAXX(BusiestDay, [Day Name])
+			RETURN
+			    "The Busiest Day of " & CurrentMonth & " is " & BusiestDayName
+			
+			```
+		lineageTag: 600a2c44-ae41-456d-bf35-92fcc5c29cfd
+
+	measure Count_Busiest_Day_monthly = ```
+			
+			VAR CurrentMonth = 
+			    SELECTEDVALUE(Main[Month Name])
+			VAR DayCounts = 
+			    ADDCOLUMNS(
+			        VALUES(Main[Day Name]),
+			        "TransactionCount",
+			        CALCULATE(COUNTA(Main[Transaction ID]), 
+			        Main[Month Name] = 
+			            CurrentMonth)
+			    )
+			VAR BusiestDay = 
+			    TOPN(
+			        1, 
+			        DayCounts,
+			        [TransactionCount], 
+			        DESC
+			    )
+			RETURN 
+			    MAXX(BusiestDay, [TransactionCount])
+			
+			
+			```
+		formatString: 0
+		lineageTag: fa0a1537-c713-469b-b533-d37598ce66cf
+
+	measure Total_title = ```
+			
+			VAR TodayDate = TODAY()
+			VAR LastMonthDate = EOMONTH(TodayDate, -1)
+			VAR LastMonthName = FORMAT(LastMonthDate, "MMMM")
+			
+			RETURN
+			    " Total Calls in " & LastMonthName
+			
+			```
+		lineageTag: 9d5a86e5-be32-44de-98e4-6e94043a0fe7
+
+	measure Ratio_Month_Han_aban = ```
+			
+			VAR HandledCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Handled")
+			VAR AbandonedCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Abandoned")
+			VAR MonthlyRatio = 
+			    ROUND(HandledCalls / AbandonedCalls,0)
+			RETURN 
+			    "The Ratio of Handled to Abandoned Calls is " & 
+			    BLANK() & UNICHAR(10) & 
+			    BLANK() & UNICHAR(10) &
+			    MonthlyRatio & ":" & 1
+			
+			
+			```
+		lineageTag: b2dbd658-bfee-4d28-a3ef-c30a6ce9449d
+
+	measure Percent_Month_Han_aban = ```
+			
+			VAR HandledCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Handled")
+			VAR AbandonedCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Abandoned")
+			VAR TotalCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]))    
+			VAR HandledProportion = 
+			    (ROUND(HandledCalls / TotalCalls,2)) * 100
+			VAR AbandonedProportion = 
+			    (ROUND(AbandonedCalls / TotalCalls,2)) * 100    
+			RETURN 
+			    "The Percentage of Handled Calls is " & 
+			    BLANK() & UNICHAR(10) & 
+			    HandledProportion & "%" &
+			    BLANK() & UNICHAR(10) & 
+			    "while that of Abandoned Calls is " & 
+			    AbandonedProportion & "%"
+			```
+		lineageTag: dbce4c87-d987-4979-817a-5c8278e6678e
+
+	measure Busiest_Queue_monthly = ```
+			
+			VAR CurrentMonth = 
+			    SELECTEDVALUE(Main[Month Name])
+			VAR QueueCounts = 
+			    ADDCOLUMNS(
+			        VALUES(Main[Queue Name]),
+			        "QueueCount",
+			        CALCULATE(COUNTA(Main[Transaction ID]), 
+			        Main[Month Name] = 
+			            CurrentMonth)
+			    )
+			VAR BusiestQueue = 
+			    TOPN(
+			        1, 
+			        QueueCounts,
+			        [QueueCount], 
+			        DESC
+			    )
+			VAR BusiestQueueName = 
+			    MAXX(BusiestQueue, [Queue Name])
+			VAR BusiestQueueCount = 
+			    MAXX(BusiestQueue, [QueueCount])
+			VAR TotalCallsInMonth = 
+			    CALCULATE(COUNTA(Main[Transaction ID]), 
+			        Main[Month Name] = CurrentMonth)
+			VAR QueueProportion = 
+			    DIVIDE(BusiestQueueCount, TotalCallsInMonth, 0) * 100 
+			RETURN 
+			    "The Busiest Queue in " & CurrentMonth & " is " & BusiestQueueName & " with " & FORMAT(QueueProportion, "0") & "% of the Total Number of Calls" 
+			
+			
+			```
+		lineageTag: 9defb299-4a67-41c7-b882-f2532cb226a3
+
+	measure Busiest_Day_comp = ```
+			
+			VAR Q1 = 
+			    VAR DayCountsQ1 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount1",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 1")
+			        )
+			    VAR BusiestDayQ1 = 
+			        TOPN(1, 
+			            DayCountsQ1, 
+			            [TransactionCount1], 
+			            DESC)
+			    VAR BusiestDayNameQ1 = 
+			        MAXX(BusiestDayQ1, [Day Name])
+			    VAR BusiestDayCountQ1 = 
+			        MAXX(BusiestDayQ1, [TransactionCount1])
+			    RETURN 
+			        "Q1: " & BusiestDayNameQ1 & ", " & BusiestDayCountQ1 & " calls"
+			VAR Q2 = 
+			    VAR DayCountsQ2 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount2",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 2")
+			        )
+			    VAR BusiestDayQ2 = 
+			        TOPN(1, 
+			            DayCountsQ2, 
+			            [TransactionCount2], 
+			            DESC)
+			    VAR BusiestDayNameQ2 = 
+			        MAXX(BusiestDayQ2, [Day Name])
+			    VAR BusiestDayCountQ2 = 
+			        MAXX(BusiestDayQ2, [TransactionCount2])
+			    RETURN 
+			        "Q2: " & BusiestDayNameQ2 & ", " & BusiestDayCountQ2 & " calls"
+			VAR Q3 = 
+			    VAR DayCountsQ3 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount3",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 3")
+			        )
+			    VAR BusiestDayQ3 = 
+			        TOPN(1, 
+			            DayCountsQ3, 
+			            [TransactionCount3], 
+			            DESC)
+			    VAR BusiestDayNameQ3 = 
+			        MAXX(BusiestDayQ3, [Day Name])
+			    VAR BusiestDayCountQ3 = 
+			        MAXX(BusiestDayQ3, [TransactionCount3])
+			    RETURN 
+			        "Q3: " & BusiestDayNameQ3 & ", " & BusiestDayCountQ3 & " calls"    
+			VAR Q4 = 
+			    VAR DayCountsQ4 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount4",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 4")
+			        )
+			    VAR BusiestDayQ4 = 
+			        TOPN(1, 
+			            DayCountsQ4, 
+			            [TransactionCount4], 
+			            DESC)
+			    VAR BusiestDayNameQ4 = 
+			        MAXX(BusiestDayQ4, [Day Name])
+			    VAR BusiestDayCountQ4 = 
+			        MAXX(BusiestDayQ4, [TransactionCount4])
+			    RETURN 
+			        "Q4: " & BusiestDayNameQ4 & ", " & BusiestDayCountQ4 & " calls"
+			RETURN
+			    Q1 & UNICHAR(10) & Q2 & UNICHAR(10) & Q3 & UNICHAR(10) & Q4
+			```
+		lineageTag: eabf9868-8201-4101-84c8-aad96cc79c53
+
+	measure Ratio_Comp_Han_aban = ```
+			
+			VAR HandledCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Handled")
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "All Time")
+			VAR AbandonedCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Abandoned")
+			VAR MonthlyRatio = 
+			    ROUND(HandledCalls / AbandonedCalls,0)
+			RETURN 
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "The Ratio of Handled to Abandoned Calls for All Time is " & 
+			        BLANK() & UNICHAR(10) & 
+			        BLANK() & UNICHAR(10) &
+			        MonthlyRatio & ":" & 1,
+			        "The Ratio of Handled to Abandoned Calls for " & SingleFY & " is " & 
+			        BLANK() & UNICHAR(10) & 
+			        BLANK() & UNICHAR(10) &
+			        MonthlyRatio & ":" & 1
+			    )
+			
+			
+			    
+			
+			
+			```
+		lineageTag: 3fa7bfa8-a932-4bbf-a7e2-6d91c55345f2
+
+	measure Percent_Comp_Han_aban = ```
+			
+			VAR HandledCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Handled")
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = 
+			    IF(
+			        DistinctFYCount = 1, 
+			        MAX(Main[Financial Year]), 
+			        "All Time"
+			    )
+			VAR AbandonedCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]),
+			    Main[Outcome] = "Abandoned")
+			VAR TotalCalls = 
+			    CALCULATE(COUNTA(Main[Transaction ID]))    
+			VAR HandledProportion = 
+			    (ROUND(HandledCalls / TotalCalls,2)) * 100
+			VAR AbandonedProportion = 
+			    (ROUND(AbandonedCalls / TotalCalls,2)) * 100    
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])), 
+			        "All Time, the percentage of Handled Calls is " & 
+			        BLANK() & UNICHAR(10) & 
+			        HandledProportion & "%" &
+			        BLANK() & UNICHAR(10) & 
+			        "while that of Abandoned Calls is " & 
+			        AbandonedProportion & "%",
+			        "For "  & SingleFY & ", the percentage of Handled Calls is " & 
+			        BLANK() & UNICHAR(10) & 
+			        HandledProportion & "%" &
+			        BLANK() & UNICHAR(10) & 
+			        "while that of Abandoned Calls is " & 
+			        AbandonedProportion & "%")
+			```
+		lineageTag: a4840c55-43b0-4305-b7b8-87c5f058f006
+
+	measure Busiest_Queue_comp = ```
+			
+			VAR Q1 = 
+			    VAR QueueCountsQ1 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Queue Name]),
+			            "QueueCount1",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 1")
+			        )
+			    VAR BusiestQueueQ1 = 
+			        TOPN(1, 
+			            QueueCountsQ1, 
+			            [QueueCount1], 
+			            DESC)
+			    VAR BusiestQueueNameQ1 = 
+			        MAXX(BusiestQueueQ1, [Queue Name])
+			    VAR BusiestQueueCountQ1 = 
+			        MAXX(BusiestQueueQ1, [QueueCount1])
+			    RETURN 
+			        "Q1: " & BusiestQueueNameQ1 & ", " & BusiestQueueCountQ1 & " calls"
+			VAR Q2 = 
+			    VAR QueueCountsQ2 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Queue Name]),
+			            "QueueCount2",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 2")
+			        )
+			    VAR BusiestQueueQ2 = 
+			        TOPN(1, 
+			            QueueCountsQ2, 
+			            [QueueCount2], 
+			            DESC)
+			    VAR BusiestQueueNameQ2 = 
+			        MAXX(BusiestQueueQ2, [Queue Name])
+			    VAR BusiestQueueCountQ2 = 
+			        MAXX(BusiestQueueQ2, [QueueCount2])
+			    RETURN 
+			        "Q2: " & BusiestQueueNameQ2 & ", " & BusiestQueueCountQ2 & " calls"
+			VAR Q3 = 
+			    VAR QueueCountsQ3 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Queue Name]),
+			            "QueueCount3",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 3")
+			        )
+			    VAR BusiestQueueQ3 = 
+			        TOPN(1, 
+			            QueueCountsQ3, 
+			            [QueueCount3], 
+			            DESC)
+			    VAR BusiestQueueNameQ3 = 
+			        MAXX(BusiestQueueQ3, [Queue Name])
+			    VAR BusiestQueueCountQ3 = 
+			        MAXX(BusiestQueueQ3, [QueueCount3])
+			    RETURN 
+			        "Q3: " & BusiestQueueNameQ3 & ", " & BusiestQueueCountQ3 & " calls"    
+			VAR Q4 = 
+			    VAR QueueCountsQ4 = 
+			        ADDCOLUMNS(
+			            VALUES(Main[Queue Name]),
+			            "QueueCount4",
+			            CALCULATE(COUNTA(Main[Transaction ID]), 
+			                Main[Quarter] = "Quarter 4")
+			        )
+			    VAR BusiestQueueQ4 = 
+			        TOPN(1, 
+			            QueueCountsQ4, 
+			            [QueueCount4], 
+			            DESC)
+			    VAR BusiestQueueNameQ4 = 
+			        MAXX(BusiestQueueQ4, [Queue Name])
+			    VAR BusiestQueueCountQ4 = 
+			        MAXX(BusiestQueueQ4, [QueueCount4])
+			    RETURN 
+			        "Q4: " & BusiestQueueNameQ4 & ", " & BusiestQueueCountQ4 & " calls"
+			RETURN
+			    Q1 & UNICHAR(10) & UNICHAR(10) & Q2 & UNICHAR(10) & UNICHAR(10) & Q3 & UNICHAR(10) & UNICHAR(10) & Q4
+			```
+		lineageTag: 817033cc-110b-4660-a3ef-7d66c94d2fbd
+
+	measure Total_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Total calls - All Time",
+			        "Total Calls in " & SingleFY
+			    )
+		lineageTag: a1b142fe-b780-40de-b7f4-81cf8691524d
+
+	measure Busiest_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Busiest Day - All Time",
+			        "Busiest Day in " & SingleFY
+			    )
+		lineageTag: 32676c64-946b-4e3e-93c5-126d327bb234
+
+	measure Busiest_Day_comp2 = ```
+			
+			VAR SelectedFinancialYear =
+			    SELECTEDVALUE(Main[Financial Year])
+			VAR AvailableMonths =
+			    DISTINCT(Main[Month Name])
+			VAR MonthCount =
+			    COUNTROWS(AvailableMonths)
+			VAR Q1 =
+			    VAR DayCountsQ1 =
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount1",
+			            CALCULATE(
+			                COUNTA(Main[Transaction ID]),
+			                Main[Quarter] = "Quarter 1"
+			            )
+			        )
+			    VAR BusiestDayQ1 =
+			        TOPN(
+			            1,
+			            DayCountsQ1,
+			            [TransactionCount1],
+			            DESC
+			        )
+			    VAR BusiestDayNameQ1 =
+			        MAXX(BusiestDayQ1, [Day Name])
+			    VAR BusiestDayCountQ1 =
+			        MAXX(BusiestDayQ1, [TransactionCount1])
+			    RETURN
+			        IF(
+			            SelectedFinancialYear = "25/26",
+			            VAR MonthForQ1 = MINX(FILTER(Main, Main[Quarter] = "Quarter 1"), Main[Month Name])
+			            RETURN
+			                MonthForQ1 & ": " & BusiestDayNameQ1 & ", " & BusiestDayCountQ1 & " calls",
+			            "Q1: " & BusiestDayNameQ1 & ", " & BusiestDayCountQ1 & " calls"
+			        )
+			VAR Q2 =
+			    VAR DayCountsQ2 =
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount2",
+			            CALCULATE(
+			                COUNTA(Main[Transaction ID]),
+			                Main[Quarter] = "Quarter 2"
+			            )
+			        )
+			    VAR BusiestDayQ2 =
+			        TOPN(
+			            1,
+			            DayCountsQ2,
+			            [TransactionCount2],
+			            DESC
+			        )
+			    VAR BusiestDayNameQ2 =
+			        MAXX(BusiestDayQ2, [Day Name])
+			    VAR BusiestDayCountQ2 =
+			        MAXX(BusiestDayQ2, [TransactionCount2])
+			    RETURN
+			        IF(
+			            SelectedFinancialYear = "25/26",
+			            VAR MonthForQ2 = MINX(FILTER(Main, Main[Quarter] = "Quarter 2"), Main[Month Name])
+			            RETURN
+			                MonthForQ2 & ": " & BusiestDayNameQ2 & ", " & BusiestDayCountQ2 & " calls",
+			            "Q2: " & BusiestDayNameQ2 & ", " & BusiestDayCountQ2 & " calls"
+			        )
+			VAR Q3 =
+			    VAR DayCountsQ3 =
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount3",
+			            CALCULATE(
+			                COUNTA(Main[Transaction ID]),
+			                Main[Quarter] = "Quarter 3"
+			            )
+			        )
+			    VAR BusiestDayQ3 =
+			        TOPN(
+			            1,
+			            DayCountsQ3,
+			            [TransactionCount3],
+			            DESC
+			        )
+			    VAR BusiestDayNameQ3 =
+			        MAXX(BusiestDayQ3, [Day Name])
+			    VAR BusiestDayCountQ3 =
+			        MAXX(BusiestDayQ3, [TransactionCount3])
+			    RETURN
+			        IF(
+			            SelectedFinancialYear = "25/26",
+			            VAR MonthForQ3 = MINX(FILTER(Main, Main[Quarter] = "Quarter 3"), Main[Month Name])
+			            RETURN
+			                MonthForQ3 & ": " & BusiestDayNameQ3 & ", " & BusiestDayCountQ3 & " calls",
+			            "Q3: " & BusiestDayNameQ3 & ", " & BusiestDayCountQ3 & " calls"
+			        )
+			VAR Q4 =
+			    VAR DayCountsQ4 =
+			        ADDCOLUMNS(
+			            VALUES(Main[Day Name]),
+			            "TransactionCount4",
+			            CALCULATE(
+			                COUNTA(Main[Transaction ID]),
+			                Main[Quarter] = "Quarter 4"
+			            )
+			        )
+			    VAR BusiestDayQ4 =
+			        TOPN(
+			            1,
+			            DayCountsQ4,
+			            [TransactionCount4],
+			            DESC
+			        )
+			    VAR BusiestDayNameQ4 =
+			        MAXX(BusiestDayQ4, [Day Name])
+			    VAR BusiestDayCountQ4 =
+			        MAXX(BusiestDayQ4, [TransactionCount4])
+			    RETURN
+			        IF(
+			            SelectedFinancialYear = "25/26",
+			            VAR MonthForQ4 = MINX(FILTER(Main, Main[Quarter] = "Quarter 4"), Main[Month Name])
+			            RETURN
+			                MonthForQ4 & ": " & BusiestDayNameQ4 & ", " & BusiestDayCountQ4 & " calls",
+			            "Q4: " & BusiestDayNameQ4 & ", " & BusiestDayCountQ4 & " calls"
+			        )
+			RETURN
+			    
+			    Q1 & UNICHAR(10) & Q2 & UNICHAR(10) & Q3 & UNICHAR(10) & Q4
+			```
+		lineageTag: bc953f39-554b-410b-a932-ce4a26505177
+
+	measure Graph_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Daily Calls - All Time",
+			        "Daily Calls in " & SingleFY
+			    )
+		lineageTag: 995f56df-4939-499f-838f-797e554afe92
+
+	measure Table_aban_title_comp = ```
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "All Time Comparison of Abandoned Calls",
+			        SingleFY & " Comparison of Abandoned Calls " 
+			    )
+			```
+		lineageTag: 4f4b1542-31e6-4282-969f-5cb25d7100f6
+
+	measure Table_han_title_comp = ```
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "All Time Comparison of Handled Calls",
+			        SingleFY & " Comparison of Handled Calls " 
+			    )
+			```
+		lineageTag: 03fb2d18-7cf5-43ca-8c3b-0c6a6ac2cef7
+
+	measure Busiest_Queue_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Busiest Queues - All Time",
+			        "Busiest Queues in " & SingleFY
+			    )
+		lineageTag: f8c7eb83-31d2-4570-ad3b-29bb1c6fa142
+
+	measure Wrapup_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Wrap up Codes - All Time",
+			        "Wrap up Codes in " & SingleFY
+			    )
+		lineageTag: 1ffe6f93-8296-4720-a6b0-f7a622c3fe33
+
+	measure Labels_title_comp =
+			
+			VAR SelectedFY = ALLSELECTED(Main[Financial Year])
+			VAR IsFilterApplied = ISFILTERED(Main[Financial Year])
+			VAR DistinctFYCount = COUNTROWS(DISTINCT(SelectedFY))
+			VAR SingleFY = IF(DistinctFYCount = 1, MAX(Main[Financial Year]), "- All Time")
+			
+			RETURN
+			    IF(
+			        NOT IsFilterApplied || DistinctFYCount = COUNTROWS(ALL(Main[Financial Year])),
+			        "Labels by Offer Action - All Time",
+			        "Labels by Offer Action in " & SingleFY
+			    )
+		lineageTag: a150cb97-0aa4-429a-ad88-de60ec8b536a
+
+	column 'Time (Creation)'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: a0c7a5bb-044a-48d4-8852-36ba36d7dd59
+		summarizeBy: none
+		sourceColumn: Time (Creation)
+
+		variation Variation
+			isDefault
+			relationship: 4539073c-dd65-4442-a31b-c28cbe83421c
+			defaultHierarchy: LocalDateTable_2886313a-b388-49a3-a8c4-2fa13ac5ff71.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Queue Name'
+		dataType: string
+		lineageTag: 3a26335c-06ea-4fbd-bc1e-3f126b3b926a
+		summarizeBy: none
+		sourceColumn: Queue Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Channel ID'
+		dataType: string
+		lineageTag: aa1fe4e0-d4dd-411d-8984-cf3e176e89d1
+		summarizeBy: none
+		sourceColumn: Channel ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Outcome
+		dataType: string
+		lineageTag: bf08bc41-4e39-43f0-86bf-c61f82d784cd
+		summarizeBy: none
+		sourceColumn: Outcome
+
+		annotation SummarizationSetBy = Automatic
+
+	column Labels
+		dataType: string
+		lineageTag: 3360bc0c-47f9-4c06-8e71-8305f874f63b
+		summarizeBy: none
+		sourceColumn: Labels
+
+		annotation SummarizationSetBy = Automatic
+
+	column Direction
+		dataType: string
+		lineageTag: 29478036-b678-4f6e-a97f-6dd127ff76c2
+		summarizeBy: none
+		sourceColumn: Direction
+
+		annotation SummarizationSetBy = Automatic
+
+	column State
+		dataType: string
+		lineageTag: 54aa6699-37eb-4de6-b3e0-90cd17bbf6a9
+		summarizeBy: none
+		sourceColumn: State
+
+		annotation SummarizationSetBy = Automatic
+
+	column Participant
+		dataType: string
+		lineageTag: 025e02d9-cb30-4eac-b4a4-1f68674d22d6
+		summarizeBy: none
+		sourceColumn: Participant
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Offer Action'
+		dataType: string
+		lineageTag: 16d6085f-1d72-49bd-b27e-bb311e8cfa87
+		summarizeBy: none
+		sourceColumn: Offer Action
+		sortByColumn: Sort_offer
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Wrap Up Code'
+		dataType: string
+		lineageTag: bc7280f7-c2c9-4478-8737-bf8ea2fd7cae
+		summarizeBy: none
+		sourceColumn: Wrap Up Code
+		sortByColumn: Sort_wrap
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Transaction ID'
+		dataType: string
+		lineageTag: 58b80666-0e45-4242-953e-b48580925c51
+		summarizeBy: none
+		sourceColumn: Transaction ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Interaction duration (mins)'
+		dataType: double
+		lineageTag: b05c426a-673c-4f25-a570-55ef110a962f
+		summarizeBy: sum
+		sourceColumn: Interaction duration (mins)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Queue Wait Duration (mins)'
+		dataType: double
+		lineageTag: 4281faac-69d6-43a5-8071-47d37db0dbc8
+		summarizeBy: sum
+		sourceColumn: Queue Wait Duration (mins)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Busy Duration (mins)'
+		dataType: double
+		lineageTag: 29e708b6-19b7-48eb-8d38-9e757d61f49a
+		summarizeBy: sum
+		sourceColumn: Busy Duration (mins)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Total Interaction (mins)'
+		dataType: double
+		lineageTag: 3fc7e545-33af-4cdc-9e6e-5746edeb0969
+		summarizeBy: sum
+		sourceColumn: Total Interaction (mins)
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Week of Year'
+		dataType: int64
+		formatString: 0
+		lineageTag: 1ae2ec3e-1800-412b-a9e0-f2922d2b90ed
+		summarizeBy: none
+		sourceColumn: Week of Year
+
+		annotation SummarizationSetBy = User
+
+	column 'Week of'
+		dataType: string
+		lineageTag: 7de356cc-d4ba-4a7d-8b73-db3a9425b2cb
+		summarizeBy: none
+		sourceColumn: Week of
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Month Name'
+		dataType: string
+		lineageTag: d8c20926-13a2-400b-960a-a2cdba579e48
+		summarizeBy: none
+		sourceColumn: Month Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quarter
+		dataType: string
+		lineageTag: 05884ec7-f485-4353-8ccb-a67141dd35a3
+		summarizeBy: none
+		sourceColumn: Quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Day Name'
+		dataType: string
+		lineageTag: 0deb1094-a275-4105-b925-d4b7ce2ed79e
+		summarizeBy: none
+		sourceColumn: Day Name
+		sortByColumn: Sort_day
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort_day
+		dataType: double
+		lineageTag: 78ee8f7d-6621-4272-b70a-d2ad31663cd1
+		summarizeBy: sum
+		sourceColumn: Sort_day
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 6cf7b344-2d6d-4680-b9e5-250ba60a5a38
+		summarizeBy: none
+		sourceColumn: Time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column 'Start of Hour'
+		dataType: dateTime
+		formatString: hh:nn AM/PM
+		lineageTag: f3439526-d434-40e4-8fe8-6ee3de9acccc
+		summarizeBy: none
+		sourceColumn: Start of Hour
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column Sort_wrap
+		dataType: string
+		lineageTag: 56259b5a-bcc0-4f5b-8130-0e9993fa8f49
+		summarizeBy: none
+		sourceColumn: Sort_wrap
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort_offer
+		dataType: string
+		lineageTag: d98307e0-d569-48e7-ad9a-30bc504bcf82
+		summarizeBy: none
+		sourceColumn: Sort_offer
+
+		annotation SummarizationSetBy = Automatic
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 7a34f2f5-6c73-4793-933d-0387d3570159
+		summarizeBy: none
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = User
+
+	column 'Financial Year' =
+			
+			VAR CurrentYear = [Year]
+			VAR CurrentMonth = VALUE(Main[Time (Creation)].[MonthNo])
+			VAR FinancialYearStart = IF(CurrentMonth >= 4, CurrentYear, CurrentYear - 1)
+			VAR FinancialYearEnd = FinancialYearStart + 1
+			VAR FinancialYearString = RIGHT(FORMAT(FinancialYearStart, "00"), 2) & "/" & RIGHT(FORMAT(FinancialYearEnd, "00"), 2)
+			RETURN
+			    FinancialYearString
+		lineageTag: 50d5270e-f7c4-4281-a4a5-27c3154714c3
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Dummy_worker = IF(Main[Participant]<>"", RIGHT(Main[Participant],3),"")
+		lineageTag: 6aa63dc1-ebf5-42cb-ae70-1a11ad68b8cb
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Quarter Hierarchy'
+		lineageTag: bf19e1b6-7ccb-491a-8e2e-491038665b5f
+
+		level Quarter
+			lineageTag: aa21223f-b017-4055-92f5-dcfbf2bbeba0
+			column: Quarter
+
+		level 'Month Name'
+			lineageTag: 4e8d28fc-5892-4ea7-ab95-179d10a89e5f
+			column: 'Month Name'
+
+	partition Main = m
+		mode: import
+		source =
+				let
+				    Source = PQin_2,
+				    #"Removed Columns" = Table.RemoveColumns(Source,{"Busy Duration.1", "Busy Duration.2", "Customer Name", "Media Type", "Busy Duration.3", "Queue Wait Duration.1", "Queue Wait Duration.2", "Queue Wait Duration.3", "Interaction Duration.1", "Interaction Duration.2", "Interaction Duration.3"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Removed Columns",{{"Day Name", type text}, {"Quarter", type text}, {"Month Name", type text}, {"Week of", type text}, {"Week of Year", Int64.Type}, {"Total Interaction (mins)", type number}, {"Busy Duration (mins)", type number}, {"Queue Wait Duration (mins)", type number}, {"Interaction duration (mins)", type number}, {"Transaction ID", type text}, {"Wrap Up Code", type text}, {"Offer Action", type text}, {"Participant", type text}, {"State", type text}, {"Direction", type text}, {"Channel ID", type text}, {"Queue Name", type text}}),
+				    #"Added Sort_day Column" = Table.AddColumn(#"Changed Type", "Sort_day", each if [Day Name] = "Friday" then 5 else if [Day Name] = "Thursday" then 4 else if [Day Name] = "Wednesday" then 3 else if [Day Name] = "Tuesday" then 2 else 1, type number),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Added Sort_day Column",{{"Start of Hour", type time}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1","","Not recorded",Replacer.ReplaceValue,{"Wrap Up Code"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","","Not recorded",Replacer.ReplaceValue,{"Offer Action"}),
+				    #"Added Sort_wrap Column" = Table.AddColumn(#"Replaced Value1", "Sort_wrap", each if [Wrap Up Code] = "Not recorded" then 1 else 2),
+				    #"Added Sort_offer Column" = Table.AddColumn(#"Added Sort_wrap Column", "Sort_offer", each if [Offer Action] = "Not recorded" then 1 else 2)
+				in
+				    #"Added Sort_offer Column"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

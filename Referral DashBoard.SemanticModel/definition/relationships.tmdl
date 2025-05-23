@@ -1,0 +1,99 @@
+relationship 2b512d90-34cd-423d-8b74-31a0e6ef0109
+	joinOnDateBehavior: datePartOnly
+	fromColumn: OPPD_Referrals_in_period_front_door.'Incoming On'
+	toColumn: LocalDateTable_5fa70ccb-759a-4b22-a05f-a8064fdc9e8a.Date
+
+relationship be8e5bc5-7456-49f1-993c-d728e5687734
+	joinOnDateBehavior: datePartOnly
+	fromColumn: OPPD_Referrals_in_period_front_door.'Started On'
+	toColumn: LocalDateTable_0397bbd1-d74c-4e15-954d-c4be4d48d1cf.Date
+
+relationship 41e7974e-26ef-4ee0-83a9-8b471ae24bcd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: OPPD_Referrals_in_period_front_door.'Completed On'
+	toColumn: LocalDateTable_a9c274ea-2dce-428b-ba45-0d911aa76f88.Date
+
+relationship 02fd8487-3312-4973-8bf8-a2f062e08c02
+	joinOnDateBehavior: datePartOnly
+	fromColumn: OPPD_Referrals_in_period_front_door.'Date of Birth(form)'
+	toColumn: LocalDateTable_8c18cfb8-7906-493b-b703-1cb1dc54854a.Date
+
+relationship 1a9dabf0-ba81-4703-b335-03b08ff20784
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Risks count'.'Incoming On'
+	toColumn: LocalDateTable_74e04075-8dda-4a95-a71c-07f2118266f7.Date
+
+relationship 9bd069bc-02e6-4a75-9281-82f5790de415
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Risks count'.'Started On'
+	toColumn: LocalDateTable_1b5d0e4b-35b9-4dfd-b4ab-d7c5ce26769d.Date
+
+relationship 153e0633-b49c-45c6-aa55-9a393f1fdf8f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Risks count'.'Completed On'
+	toColumn: LocalDateTable_3c78acec-9109-4910-bda0-27012cf3076e.Date
+
+relationship 4bd1cb96-5723-4ff2-963d-dbb9584e46ea
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Requested support count'.'Incoming On'
+	toColumn: LocalDateTable_8780d455-cb96-4ea4-9ac2-c31b9fe1d11c.Date
+
+relationship b296a7e3-86c7-4e15-80f2-180d0947247e
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Requested support count'.'Started On'
+	toColumn: LocalDateTable_8ed9ec37-932b-4323-b758-e68a34588d2e.Date
+
+relationship c6de253d-43cd-4ddd-9395-2b47ba3e5f52
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Requested support count'.'Completed On'
+	toColumn: LocalDateTable_37d030a6-d299-4509-8735-f848f8585de9.Date
+
+relationship AutoDetected_f5846818-8691-473e-8871-ebcdabe58972
+	fromColumn: OPPD_Referrals_in_period_front_door.'Person ID'
+	toColumn: 'Person IDs'.'Person ID'
+
+relationship AutoDetected_7ab255a3-3730-4d12-b625-dca04d950fd1
+	fromColumn: 'Risks count'.'Person ID'
+	toColumn: 'Person IDs'.'Person ID'
+
+relationship AutoDetected_91855ecb-e1fa-44b5-a847-2df1f34338cb
+	fromColumn: 'Requested support count'.'Person ID'
+	toColumn: 'Person IDs'.'Person ID'
+
+relationship 1ff8a88e-0e1b-4002-bc65-b9e567c68337
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Step IDS'.'Started On'
+	toColumn: LocalDateTable_1f84885b-f0b8-4d91-a173-767ffae12d65.Date
+
+relationship b6e22b45-3c11-457e-994a-db55a48f35b1
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Person IDs'.'Started On'
+	toColumn: LocalDateTable_98c1748f-4f5e-4b29-b134-a52086e4bf91.Date
+
+relationship AutoDetected_78fb84d6-4ff2-4ff2-b664-d81f0076e8eb
+	fromColumn: OPPD_Referrals_in_period_front_door.'Step ID'
+	toColumn: 'Step IDS'.'Step ID'
+
+relationship AutoDetected_462c7d73-3e78-4dd3-b49f-c4e0493b6f72
+	fromColumn: 'Risks count'.'Step ID'
+	toColumn: 'Step IDS'.'Step ID'
+
+relationship AutoDetected_715b0c91-34d8-4d0c-b68a-b59afeb00923
+	fromColumn: 'Requested support count'.'Step ID'
+	toColumn: 'Step IDS'.'Step ID'
+
+relationship AutoDetected_d0e50f16-eb90-47b6-a1e2-a5f3c71f5f3b
+	isActive: false
+	fromColumn: 'Step IDS'.'Person ID'
+	toColumn: 'Person IDs'.'Person ID'
+
+relationship 2bf6d312-0792-4458-9567-4c5a7e3bbfef
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DataRefresh.Date
+	toColumn: LocalDateTable_b100fd1a-4bb2-478b-a359-b1a476afb772.Date
+
+relationship e3d32659-dd84-40b8-99c7-25d2dd5ae560
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DataRefresh.DateTime
+	toColumn: LocalDateTable_03d1c6a5-8a43-4420-8d74-58463b66935f.Date
+

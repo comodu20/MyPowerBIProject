@@ -1,0 +1,479 @@
+table OPPD_Referrals_in_period_front_door
+	lineageTag: 4f0153cc-283e-45a1-871e-8cd2d95effd2
+
+	measure Referral_count_cog = CALCULATE(DISTINCTCOUNTNOBLANK(OPPD_Referrals_in_period_front_door[Step ID]), OPPD_Referrals_in_period_front_door[Cognitive impairment?]= "Yes")
+		formatString: 0
+		lineageTag: f9e89314-d039-488e-b2c0-46eab00da212
+
+	measure Referral_count_sens = CALCULATE(DISTINCTCOUNTNOBLANK(OPPD_Referrals_in_period_front_door[Step ID]), OPPD_Referrals_in_period_front_door[Sensory impairment?]= "Yes")
+		formatString: 0
+		lineageTag: cce645b9-468c-47ee-8eb2-7cdd07088719
+
+	measure Referral_count_priority = ```
+			
+			CALCULATE(DISTINCTCOUNTNOBLANK(OPPD_Referrals_in_period_front_door[Step ID]),
+			FILTER(
+			    OPPD_Referrals_in_period_front_door, 
+			    OPPD_Referrals_in_period_front_door[Step Assignee] = "OPPD Contact Screening - Priority" ||OPPD_Referrals_in_period_front_door[Step Assignee] = "OPPD Contact Referrals - Priority"
+			    )
+			)
+			```
+		formatString: 0
+		lineageTag: 58da6be5-cba8-4136-bd5d-cf229fb1a9b2
+
+	measure Started_incomplete_count = CALCULATE(DISTINCTCOUNT(OPPD_Referrals_in_period_front_door[Step ID]), OPPD_Referrals_in_period_front_door[Step Status] = "Started")
+		formatString: 0
+		lineageTag: 9ada47d0-07db-4f86-b8d5-b99cab53c312
+
+	measure Completed_count = CALCULATE(DISTINCTCOUNT(OPPD_Referrals_in_period_front_door[Step ID]), ISBLANK(OPPD_Referrals_in_period_front_door[Completed On]) = FALSE())
+		formatString: 0
+		lineageTag: d8b6c88d-a719-41b2-8d07-cfb1cd74c97b
+
+	measure Referral_count_nonpriority = ```
+			
+			CALCULATE(DISTINCTCOUNTNOBLANK(OPPD_Referrals_in_period_front_door[Step ID]),
+			FILTER(
+			    OPPD_Referrals_in_period_front_door, 
+			    OPPD_Referrals_in_period_front_door[Step Assignee] = "OPPD Contact Referrals - Standard" ||OPPD_Referrals_in_period_front_door[Step Assignee] = "OPPD Contact Screening - Standard"
+			    )
+			)
+			```
+		formatString: 0
+		lineageTag: 17df0095-c8b7-4c0e-b373-f2d9461d3713
+
+	measure Count_active_filters_Start = ```
+			
+			IF(
+			    ISFILTERED(OPPD_Referrals_in_period_front_door[Started On]), 
+			    VAR Started_fils = FILTERS(OPPD_Referrals_in_period_front_door[Started On].[Month])
+			    VAR Started_count = COUNTROWS(Started_fils)  - 11
+			    RETURN Started_count&""
+			)
+			```
+		lineageTag: 824dc3e1-24cd-48f2-967b-5478c90694b6
+
+	measure Count_active_filters_Gender = ```
+			
+			IF(
+			    ISFILTERED(OPPD_Referrals_in_period_front_door[Gender(form)]), 
+			    VAR Gender_fils = FILTERS(OPPD_Referrals_in_period_front_door[Gender(form)])
+			    VAR Gender_count = COUNTROWS(Gender_fils)
+			    RETURN Gender_count&""
+			)
+			```
+		lineageTag: 51e3a6ac-756c-46eb-a1a8-9f7f7a32d26f
+
+	measure Count_active_filters_AgeBand = ```
+			
+			IF(
+			    ISFILTERED(OPPD_Referrals_in_period_front_door[Age_band]), 
+			    VAR AgeBand_filt = FILTERS(OPPD_Referrals_in_period_front_door[Age_band])
+			    VAR AgeBand_count = COUNTROWS(AgeBand_filt)
+			    RETURN AgeBand_count&""
+			)
+			
+			```
+		lineageTag: e87845ad-5749-46b5-8f9c-cacc97eb167d
+
+	measure Count_active_filters_Completed = ```
+			
+			IF(
+			    ISFILTERED(OPPD_Referrals_in_period_front_door[Completed_status]), 
+			    VAR Completed_filt = FILTERS(OPPD_Referrals_in_period_front_door[Completed_status])
+			    VAR Completed_count = COUNTROWS(Completed_filt)
+			    RETURN Completed_count&""
+			)
+			```
+		lineageTag: e020a08a-9551-48d6-a768-f0c57cb411b5
+
+	measure Color_active_start =
+			
+			IF(
+			    [Count_active_filters_Start] = "",
+			    "#09124F",
+			    "#EFB5B9"
+			)
+		lineageTag: 2bdbf275-d89f-4e48-be12-3c020c9d1bd0
+
+	measure Color_active_Gender =
+			
+			IF(
+			    [Count_active_filters_Gender] = "",
+			    "#09124F",
+			    "#EFB5B9"
+			)
+		lineageTag: 4899266e-0c94-409d-9e97-bafe0406a1a0
+
+	measure Color_active_AgeBand =
+			
+			IF(
+			    [Count_active_filters_AgeBand] = "",
+			    "#09124F",
+			    "#EFB5B9"
+			)
+		lineageTag: 02fb0b19-1ee5-40a9-bfe0-c49ae74ab996
+
+	measure Color_active_Completed =
+			
+			IF(
+			    [Count_active_filters_Completed] = "",
+			    "#09124F",
+			    "#EFB5B9"
+			)
+		lineageTag: 65178d8f-92d6-4265-bf89-ab023f304f49
+
+	column 'Person ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 3c3d154e-7589-449a-a2ed-1d1b8f3c0d4d
+		summarizeBy: none
+		sourceColumn: Person ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Person Name'
+		dataType: string
+		lineageTag: b6bd4931-6b70-4e56-852c-3479729bb31c
+		summarizeBy: none
+		sourceColumn: Person Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step Type'
+		dataType: string
+		lineageTag: a9e50579-1ffb-417c-bc56-2b05d5d81257
+		summarizeBy: none
+		sourceColumn: Step Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step Created By'
+		dataType: string
+		lineageTag: 3c4b3249-2987-4ea1-a60e-cbc861246fb9
+		summarizeBy: none
+		sourceColumn: Step Created By
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step ID'
+		dataType: int64
+		formatString: 0
+		lineageTag: 81c9538d-7a9c-465c-94ae-2caae0470f62
+		summarizeBy: none
+		sourceColumn: Step ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step Status'
+		dataType: string
+		lineageTag: 1f43971f-7115-48f3-9e9a-6f72aafa7eaa
+		summarizeBy: none
+		sourceColumn: Step Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Incoming On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9814a0a2-cc28-4ef7-9c96-69a7ecb5c93d
+		summarizeBy: none
+		sourceColumn: Incoming On
+
+		variation Variation
+			isDefault
+			relationship: 2b512d90-34cd-423d-8b74-31a0e6ef0109
+			defaultHierarchy: LocalDateTable_5fa70ccb-759a-4b22-a05f-a8064fdc9e8a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Started On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 969996d7-7b66-4a67-89aa-1d56b619a68f
+		summarizeBy: none
+		sourceColumn: Started On
+
+		variation Variation
+			isDefault
+			relationship: be8e5bc5-7456-49f1-993c-d728e5687734
+			defaultHierarchy: LocalDateTable_0397bbd1-d74c-4e15-954d-c4be4d48d1cf.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Completed On'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c06c655a-0ac0-426b-9a23-225ebe892f0d
+		summarizeBy: none
+		sourceColumn: Completed On
+
+		variation Variation
+			isDefault
+			relationship: 41e7974e-26ef-4ee0-83a9-8b471ae24bcd
+			defaultHierarchy: LocalDateTable_a9c274ea-2dce-428b-ba45-0d911aa76f88.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step Assignee'
+		dataType: string
+		lineageTag: 854ff6ec-9708-4244-8b25-bfd01341b64e
+		summarizeBy: none
+		sourceColumn: Step Assignee
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Step Responsible Team'
+		dataType: string
+		lineageTag: 00b75e85-a2e4-438b-9e97-baad9630103b
+		summarizeBy: none
+		sourceColumn: Step Responsible Team
+
+		annotation SummarizationSetBy = Automatic
+
+	column Gender(form)
+		dataType: string
+		lineageTag: 7b33c211-d3c8-435c-80d8-0a67886d00c1
+		summarizeBy: none
+		sourceColumn: Gender(form)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date of Birth(form)'
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 66c7f2c6-1599-480a-b32b-b0a04a365bc9
+		summarizeBy: none
+		sourceColumn: Date of Birth(form)
+
+		variation Variation
+			isDefault
+			relationship: 02fd8487-3312-4973-8bf8-a2f062e08c02
+			defaultHierarchy: LocalDateTable_8c18cfb8-7906-493b-b703-1cb1dc54854a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Approximate age(form)'
+		dataType: string
+		lineageTag: b53d5720-437a-432e-b81b-3f217757eb88
+		summarizeBy: none
+		sourceColumn: Approximate age(form)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Sensory impairment?'
+		dataType: string
+		lineageTag: b2943ff1-0a11-4737-940e-a243169dbade
+		summarizeBy: none
+		sourceColumn: Sensory impairment?
+
+		annotation SummarizationSetBy = Automatic
+
+	column ' Sensory impairment details?'
+		dataType: string
+		lineageTag: 405d5b4e-78ff-45e6-900f-c0bb97790b95
+		summarizeBy: none
+		sourceColumn: " Sensory impairment details?"
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Can they communicate verbally? '
+		dataType: string
+		lineageTag: 183044bb-c2c9-4eb1-bbd9-5a8f10c7cfe6
+		summarizeBy: none
+		sourceColumn: "Can they communicate verbally? "
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Primary language'
+		dataType: string
+		lineageTag: 106dd06d-6987-4b9a-ab4d-ba6715ceafae
+		summarizeBy: none
+		sourceColumn: Primary language
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'English fluency?'
+		dataType: string
+		lineageTag: 75f5923c-6a20-4e42-89ab-6c0934b75d2e
+		summarizeBy: none
+		sourceColumn: English fluency?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Cognitive impairment?'
+		dataType: string
+		lineageTag: f5d01c26-2152-4030-b65c-bc38339f178b
+		summarizeBy: none
+		sourceColumn: Cognitive impairment?
+
+		annotation SummarizationSetBy = Automatic
+
+	column ' Cognitive impairment details'
+		dataType: string
+		lineageTag: f29b1574-f3aa-49e0-9c79-9f30e9609bbe
+		summarizeBy: none
+		sourceColumn: " Cognitive impairment details"
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Do you have any reason to doubt their ability to engage with a practitioner regarding this referral?'
+		dataType: string
+		lineageTag: 4fc12ea6-a387-4173-813a-6a18a7b6cf55
+		summarizeBy: none
+		sourceColumn: Do you have any reason to doubt their ability to engage with a practitioner regarding this referral?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Type of referral'
+		dataType: string
+		lineageTag: e385ff7f-c259-4382-91cf-b503fc9af66a
+		summarizeBy: none
+		sourceColumn: Type of referral
+		sortByColumn: Sort_referral_type
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Organisation type'
+		dataType: string
+		lineageTag: 60ac7aee-836b-4f0c-b4db-9451eb0b8abc
+		summarizeBy: none
+		sourceColumn: Organisation type
+
+		annotation SummarizationSetBy = Automatic
+
+	column Organisation
+		dataType: string
+		lineageTag: 1f3dccb5-4dba-4170-a2b8-9d661d6e1ae7
+		summarizeBy: none
+		sourceColumn: Organisation
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Requested Support'
+		dataType: string
+		lineageTag: 0c377c1b-6a06-4fc8-8153-4bbd6165f4b7
+		summarizeBy: none
+		sourceColumn: Requested Support
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Is the person being referred currently receiving support?'
+		dataType: string
+		lineageTag: aa76eeaa-5a7c-49e1-abfa-2d443c703e77
+		summarizeBy: none
+		sourceColumn: Is the person being referred currently receiving support?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Has this person consented to the referral?'
+		dataType: string
+		lineageTag: b307abbc-eea4-433f-8e3d-c6397fbdc55d
+		summarizeBy: none
+		sourceColumn: Has this person consented to the referral?
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Risks in the Property'
+		dataType: string
+		lineageTag: c83eb54a-bccb-41f9-bb73-306e69de6df8
+		summarizeBy: none
+		sourceColumn: Risks in the Property
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Known risks to professionals entering the property?'
+		dataType: string
+		lineageTag: 079f3ed1-1e9b-4dbb-a937-bfd256eb11ac
+		summarizeBy: none
+		sourceColumn: Known risks to professionals entering the property?
+
+		annotation SummarizationSetBy = Automatic
+
+	column Sort_referral_type
+		dataType: double
+		lineageTag: 80fc56c5-eb7a-44ba-996a-c952e6642bac
+		summarizeBy: sum
+		sourceColumn: Sort_referral_type
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Calculated_age = DATEDIFF(OPPD_Referrals_in_period_front_door[Date of Birth(form)], TODAY(), YEAR)
+		formatString: 0
+		lineageTag: 1a52931b-97a2-4b63-bed1-bebaacee8eec
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Age_band = ```
+			
+			SWITCH(
+			    TRUE(),
+			    ISBLANK(OPPD_Referrals_in_period_front_door[Calculated_age]) = TRUE(), 
+			    "Not recorded",
+			    OPPD_Referrals_in_period_front_door[Calculated_age] < 18,
+			    "Under 18",
+			    OPPD_Referrals_in_period_front_door[Calculated_age] >= 18 && OPPD_Referrals_in_period_front_door[Calculated_age] <= 25, "18-25",
+			    OPPD_Referrals_in_period_front_door[Calculated_age] >= 26 && OPPD_Referrals_in_period_front_door[Calculated_age] <= 64, "26-64",
+			    OPPD_Referrals_in_period_front_door[Calculated_age] >= 65, "65+"
+			)
+			```
+		lineageTag: 96946084-220c-4307-9e15-be3132b56bf1
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column Completed_status =
+			
+			SWITCH(TRUE(),
+			ISBLANK(OPPD_Referrals_in_period_front_door[Completed On]) = TRUE(),
+			"No",
+			"Yes")
+		lineageTag: c3fce326-4090-4a7d-b3de-11599026050f
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action (Step Type)'
+		dataType: string
+		lineageTag: 13ca1e07-135f-48ac-adb6-03c87d9a0e0a
+		summarizeBy: none
+		sourceColumn: Next Action (Step Type)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action'
+		dataType: string
+		lineageTag: f31ac65a-c930-44fb-a03f-4bba0775f93e
+		summarizeBy: none
+		sourceColumn: Next Action
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Next Action Reason'
+		dataType: string
+		lineageTag: 44e6188d-297b-4d11-915b-a33cd28ae484
+		summarizeBy: none
+		sourceColumn: Next Action Reason
+
+		annotation SummarizationSetBy = Automatic
+
+	partition OPPD_Referrals_in_period_front_door = m
+		mode: import
+		source =
+				let
+				    Source = Oracle.Database("swk-rep-db2.lbs.ad.southwark.gov.uk:1542/mosrep", [HierarchicalNavigation=true, Query="SELECT#(lf)wsp.person_id AS ""Person ID"",#(lf)p.full_name AS ""Person Name"",#(lf)wst.description AS ""Step Type"",#(lf)wkcb.full_name AS ""Step Created By"", #(lf)wsp.workflow_step_id AS ""Step ID"",#(lf)wsp.step_status AS ""Step Status"",#(lf)wsp.incoming_on AS ""Incoming On"",#(lf)wsp.started_on AS ""Started On"",#(lf)wsp.completed_on AS ""Completed On"",#(lf)wst2.description AS ""Next Action (Step Type)"", #(lf)na.description AS ""Next Action (Alias)"", #(lf)wrt.description AS ""Next Action Reason"",#(lf)wk.full_name AS ""Step Assignee"",#(lf)rt.name AS ""Step Responsible Team"",#(lf)c0.text_answer AS ""Gender(form)"",#(lf)c87.date_answer AS ""Date of Birth(form)"",#(lf)c88.text_answer AS ""Approximate age(form)"",#(lf)c104.text_answer AS ""Sensory impairment?"",#(lf)c105.text_answer AS "" Sensory impairment details?"",#(lf)c106.text_answer AS ""Can they communicate verbally? "",#(lf)c107.text_answer AS ""Primary language"",#(lf)c108.text_answer AS ""English fluency?"",#(lf)c109.text_answer AS ""Cognitive impairment?"",#(lf)c110.text_answer AS "" Cognitive impairment details"",#(lf)c111.text_answer AS ""Do you have any reason to doubt their ability to engage with a practitioner regarding this referral?"",#(lf)c113.text_answer AS ""Type of referral"",#(lf)c1.text_answer AS ""Organisation type"",#(lf)c2.text_answer AS ""Organisation"",#(lf)CASE #(lf)WHEN c10.text_answer is not null THEN 'Safeguarding intervention'||', ' end ||#(lf)CASE #(lf)WHEN c11.text_answer is not null then 'Care Act Assessment'||', ' end ||#(lf)CASE #(lf)WHEN c12.text_answer is not null then 'Occupational Therapy Support'||', ' end ||#(lf)CASE #(lf)WHEN c13.text_answer is not null then 'Sensory Impairment Support'||', ' end ||#(lf)CASE #(lf)WHEN c14.text_answer is not null then 'Telecare Assessment'||', ' end ||#(lf)CASE #(lf)WHEN c15.text_answer is not null then 'Support from Community Voluntary Services'||', ' end ||#(lf)CASE #(lf)WHEN c16.text_answer is not null then 'Carer Conversation/Assessment'||', ' end AS ""Requested Support"",#(lf)c17.text_answer AS ""Is the person being referred currently receiving support?"",#(lf)c20.text_answer AS ""Has this person consented to the referral?"",#(lf)CASE #(lf)WHEN c22.text_answer is not null then 'Hoarding or clutter'||', ' end ||#(lf)CASE #(lf)WHEN c23.text_answer is not null then 'Trip hazards'||', ' end ||#(lf)CASE #(lf)WHEN c24.text_answer is not null then 'Tenancy or eviction risk'||', ' end ||#(lf)CASE #(lf)WHEN c25.text_answer is not null then 'Pests or infestations'||', ' end ||#(lf)CASE#(lf)WHEN c26.text_answer is not null then 'Absence of utilities'||', ' end ||#(lf)CASE#(lf)WHEN c27.text_answer is not null then 'Property neglect' end AS ""Risks in the Property"",#(lf)c29.text_answer AS ""Known risks to professionals entering the property?"" #(lf)From #(lf)dm_workflow_steps_people_vw wsp#(lf)INNER JOIN#(lf)dm_workflow_step_types wst on wst.workflow_step_type_id = wsp.workflow_step_type_id#(lf)INNER JOIN #(lf)dm_persons p on p.person_id = wsp.person_id#(lf)INNER JOIN #(lf)dm_workers wkcb on wkcb.worker_id = wsp.created_by_worker_id#(lf)LEFT JOIN #(lf)dm_workflow_links wl on wl.source_step_id = wsp.workflow_step_id#(lf)LEFT JOIN #(lf)dm_workflow_steps ws on ws.workflow_step_id = wl.target_step_id and ws.cancelled_on is null#(lf)LEFT JOIN#(lf)dm_workflow_step_types wst2 on wst2.workflow_step_type_id = ws.workflow_step_type_id#(lf)LEFT JOIN #(lf)dm_workflow_nxt_action_types na on na.workflow_next_action_type_id = wl.workflow_next_action_type_id#(lf)LEFT JOIN #(lf)dm_workflow_reason_types wrt on wrt.workflow_reason_type_id = wl.workflow_reason_type_id#(lf)LEFT JOIN #(lf)dm_workers wk on wk.worker_id = wsp.assignee_id#(lf)LEFT JOIN #(lf)dm_organisations rt on rt.organisation_id = wsp.responsible_team_id#(lf)LEFT JOIN #(lf)dm_cached_form_ans c0 on c0.workflow_step_id = wsp.workflow_step_id and c0.question_user_code = 'oppd.referral.ap.gender'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c87 on c87.form_id = c0.form_id and c87.question_user_code = 'bafb51e3-4e82-483b-a401-1962fdf9c0b1'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c88 on c88.form_id = c0.form_id and c88.question_user_code = 'oppd.referral.ap.age'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c104 on c104.form_id = c0.form_id and c104.question_user_code = 'oppd.referral.ah.sensory_impairment'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c105 on c105.form_id = c0.form_id and c105.question_user_code = 'oppd.referral.ah.sensory_impairment2'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c106 on c106.form_id = c0.form_id and c106.question_user_code = 'oppd.referral.ah.communicate' #(lf)LEFT JOIN #(lf)dm_cached_form_ans c107 on c107.form_id = c0.form_id and c107.question_user_code = 'oppd.referral.ah.primary_language'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c108 on c108.form_id = c0.form_id and c108.question_user_code = 'oppd.referral.ah.fluency_eng'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c109 on c109.form_id = c0.form_id and c109.question_user_code = 'oppd.referral.ah.cognitive_impairment'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c110 on c110.form_id = c0.form_id and c110.question_user_code = 'oppd.referral.ah.cognitive_impairment2'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c111 on c111.form_id = c0.form_id and c111.question_user_code = 'oppd.referral.ah.engage'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c113 on c113.form_id = c0.form_id and c113.question_user_code = 'oppd.referral.rd.referral_type'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c1 on c1.form_id = c0.form_id and c1.question_user_code = 'oppd.referral.rd.work'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c2 on c2.form_id = c0.form_id and c2.question_user_code = 'oppd.referral.rd.organisation'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c10 on c10.form_id = c0.form_id and c10.question_user_code = 'oppd.referral.rd.requested_support'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c11 on c11.form_id = c0.form_id and c11.question_user_code = 'oppd.referral.rd.requested_support2'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c12 on c12.form_id = c0.form_id and c12.question_user_code = 'oppd.referral.rd.requested_support3'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c13 on c13.form_id = c0.form_id and c13.question_user_code = 'oppd.referral.rd.requested_support4'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c14 on c14.form_id = c0.form_id and c14.question_user_code = 'oppd.referral.rd.requested_support5'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c15 on c15.form_id = c0.form_id and c15.question_user_code = 'oppd.referral.rd.requested_support6'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c16 on c16.form_id = c0.form_id and c16.question_user_code = 'oppd.referral.rd.requested_support7'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c17 on c17.form_id = c0.form_id and c17.question_user_code = 'oppd.referral.rd.current_support'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c20 on c20.form_id = c0.form_id and c20.question_user_code = 'oppd.referral.rd.consent' -- Has this person consented to the referral? #(lf)LEFT JOIN #(lf)dm_cached_form_ans c22 on c22.form_id = c0.form_id and c22.question_user_code = 'oppd.risks.property'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c23 on c23.form_id = c0.form_id and c23.question_user_code = 'oppd.risks.property2'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c24 on c24.form_id = c0.form_id and c24.question_user_code = 'oppd.risks.property3'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c25 on c25.form_id = c0.form_id and c25.question_user_code = 'oppd.risks.property4'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c26 on c26.form_id = c0.form_id and c26.question_user_code = 'oppd.risks.property5'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c27 on c27.form_id = c0.form_id and c27.question_user_code = 'oppd.risks.property6'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c28 on c28.form_id = c0.form_id and c28.question_user_code = 'oppd.risks.property7'#(lf)LEFT JOIN #(lf)dm_cached_form_ans c29 on c29.form_id = c0.form_id and c29.question_user_code = 'oppd.risks.professionals'#(lf)#(lf)WHERE#(lf)wsp.cancelled_on is null and #(lf)wsp.workflow_step_type_id = 7432"]),
+				    #"Added Conditional Column" = Table.AddColumn(Source, "Sort_referral_type", each if [Type of referral] = "Professional" then 1 else if [Type of referral] = "Self" then 3 else if [Type of referral] = "Friends or Family" then 2 else 4, type number),
+				    #"Replaced Value" = Table.ReplaceValue(#"Added Conditional Column",null,"No Recorded Cognitive Impairment",Replacer.ReplaceValue,{" Cognitive impairment details"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value",null,"No Recorded Sensory Impairment",Replacer.ReplaceValue,{" Sensory impairment details?"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Replaced Value1",{{"Next Action (Alias)", "Next Action"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

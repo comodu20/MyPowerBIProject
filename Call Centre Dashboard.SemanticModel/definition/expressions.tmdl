@@ -1,0 +1,17 @@
+expression PQin_2 =
+		let
+		    Source = Excel.Workbook(Web.Contents("https://southwark.sharepoint.com/sites/ASCServiceDevelopment609/Shared%20Documents/PDQ/Performance%20and%20Quality%20Team/8%20by%208%20call%20log%20analyses/8x8%20report%20generator.xlsm"), null, true),
+		    PQin_2_Table = Source{[Item="PQin_2",Kind="Table"]}[Data],
+		    #"Changed Type" = Table.TransformColumnTypes(PQin_2_Table,{{"Time (Creation)", type datetime}, {"Queue Name", type text}, {"Channel ID", type text}, {"Outcome", type text}, {"Labels", type text}, {"Customer Name", type text}, {"Media Type", type text}, {"Direction", type text}, {"State", type text}, {"Participant", type text}, {"Offer Action", type text}, {"Busy Duration.1", Int64.Type}, {"Busy Duration.2", Int64.Type}, {"Busy Duration.3", Int64.Type}, {"Wrap Up Code", type text}, {"Queue Wait Duration.1", Int64.Type}, {"Queue Wait Duration.2", Int64.Type}, {"Queue Wait Duration.3", Int64.Type}, {"Transaction ID", Int64.Type}, {"Interaction Duration.1", Int64.Type}, {"Interaction Duration.2", Int64.Type}, {"Interaction Duration.3", Int64.Type}, {"Interaction duration (mins)", type number}, {"Queue Wait Duration (mins)", type number}, {"Busy Duration (mins)", type number}, {"Total Interaction (mins)", type number}, {"Week of Year", Int64.Type}, {"Week of", type text}, {"Month Name", type text}, {"Quarter", type text}, {"Day Name", type text}}),
+		    #"Inserted Time" = Table.AddColumn(#"Changed Type", "Time", each DateTime.Time([#"Time (Creation)"]), type time),
+		    #"Inserted Start of Hour" = Table.AddColumn(#"Inserted Time", "Start of Hour", each Time.StartOfHour([#"Time (Creation)"]), type datetime),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Inserted Start of Hour",{"Time (Creation)", "Time", "Start of Hour", "Queue Name", "Channel ID", "Outcome", "Labels", "Customer Name", "Media Type", "Direction", "State", "Participant", "Offer Action", "Busy Duration.1", "Busy Duration.2", "Busy Duration.3", "Wrap Up Code", "Queue Wait Duration.1", "Queue Wait Duration.2", "Queue Wait Duration.3", "Transaction ID", "Interaction Duration.1", "Interaction Duration.2", "Interaction Duration.3", "Interaction duration (mins)", "Queue Wait Duration (mins)", "Busy Duration (mins)", "Total Interaction (mins)", "Week of Year", "Week of", "Month Name", "Quarter", "Day Name"}),
+		    #"Inserted Year" = Table.AddColumn(#"Reordered Columns", "Year", each Date.Year([#"Time (Creation)"]), Int64.Type)
+		in
+		    #"Inserted Year"
+	lineageTag: 41325093-ccfd-4baa-9a65-51ce7f8c9ea3
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
