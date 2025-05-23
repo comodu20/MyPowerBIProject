@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PowerBI Dashboards Portfolio</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0; /* Light background for the page */
+        }
+        .dashboard-container {
+            width: 100vw;
+            height: calc(100vh - 60px); /* Adjust height for navigation bar */
+            overflow: hidden; /* Hide scrollbars if content overflows */
+        }
+        iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+            display: none; /* Hide all iframes by default */
+        }
+        iframe.active {
+            display: block; /* Show the active iframe */
+        }
+        .navigation {
+            display: flex;
+            justify-content: center;
+            padding: 10px;
+            background-color: #333;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: sticky; /* Keeps navigation at the top */
+            top: 0;
+            z-index: 1000; /* Ensures navigation is above iframe */
+            height: 40px; /* Fixed height for navigation */
+        }
+        .navigation button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .navigation button:hover {
+            background-color: #0056b3;
+        }
+        .navigation button.active {
+            background-color: #004494; /* Darker blue for active button */
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navigation">
+        <button onclick="showDashboard('Call centre dashboard')" class="active">Dashboard 1</button>
+        <button onclick="showDashboard('Referrals dashboard')">Dashboard 2</button>
+        <button onclick="showDashboard('Reviews Dashboard')">Dashboard 3</button>
+    </div>
+
+    <div class="dashboard-container">
+        <iframe id="Call centre dashboard" class="active"
+            src="https://app.powerbi.com/view?r=eyJrIjoiMTc0NmI0YTItODEwNi00NmFlLWI4M2ItNTg3M2E4OWE4OWFkIiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
+            allowFullScreen="true">
+        </iframe>
+
+        <iframe id="Referrals dashboard"
+            src="https://app.powerbi.com/view?r=eyJrIjoiNzdlZDBiZjYtNjg4NC00MzM0LTkxNWMtOWY3NzY2ZDIzYTMyIiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
+            allowFullScreen="true">
+        </iframe>
+
+        <iframe id="Reviews Dashboard"
+            src="https://app.powerbi.com/view?r=eyJrIjoiMTRhMTgyNzktN2Q3Yi00ZGY2LWI2ODUtZmE1NDI5NjAxNzM2IiwidCI6ImQwNzFmZDVjLTdjZGYtNDQzOS05YTE5LWJkYjgzOTc1YmVmNSJ9"
+            allowFullScreen="true">
+        </iframe>
+    </div>
+
+    <script>
+        function showDashboard(dashboardId) {
+            // Get all iframes and buttons
+            var iframes = document.querySelectorAll('.dashboard-container iframe');
+            var buttons = document.querySelectorAll('.navigation button');
+
+            // Hide all iframes and deactivate all buttons
+            iframes.forEach(function(iframe) {
+                iframe.classList.remove('active');
+            });
+            buttons.forEach(function(button) {
+                button.classList.remove('active');
+            });
+
+            // Show the selected iframe and activate its button
+            document.getElementById(dashboardId).classList.add('active');
+            event.target.classList.add('active'); // 'event.target' refers to the clicked button
+        }
+
+        // Initialize the first dashboard to be visible on load
+        // You might want to explicitly call showDashboard('dashboard1') here
+        // or rely on the initial 'active' classes as set in the HTML.
+    </script>
+
+</body>
+</html>
