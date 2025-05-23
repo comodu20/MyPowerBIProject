@@ -38,3 +38,6 @@ I'm always open to discussing data science, analytics, and new opportunities. Fe
 
 LinkedIn: [Morgan Omodu](https://www.linkedin.com/in/morganomodu/)
 Email: omodumorgan@gmail.com
+
+License
+This repository is licensed under the MIT License. See the LICENSE file for more details.
