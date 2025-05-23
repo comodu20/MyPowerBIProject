@@ -31,6 +31,8 @@ View Dashboard: [Reviews Dashboard](https://app.powerbi.com/view?r=eyJrIjoiMTRhM
 Power BI/DAX/Mcode: For data modelling, analysis, visualisation, and user experience.
 HTML, CSS, JavaScript: To create the interactive web shell for embedding dashboards and enabling navigation.
 GitHub Pages: For hosting the static website and making the portfolio publicly accessible.
+
+
 📧 Connect With Me
 I'm always open to discussing data science, analytics, and new opportunities. Feel free to connect!
 
