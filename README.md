@@ -35,4 +35,4 @@ GitHub Pages: For hosting the static website and making the portfolio publicly a
 I'm always open to discussing data science, analytics, and new opportunities. Feel free to connect!
 
 LinkedIn: [Morgan Omodu](https://www.linkedin.com/in/morganomodu/)
-Email: [Reach me here](mailto:omodumorgan@gmail.com)
+Email: omodumorgan@gmail.com
