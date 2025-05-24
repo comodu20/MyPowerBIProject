@@ -1,4 +1,4 @@
-#📊 My Interactive Power BI Dashboard Portfolio
+# 📊 My Interactive Power BI Dashboard Portfolio
 
 Welcome to my interactive Power BI Dashboard Portfolio! This repository showcases a collection of my data visualisation projects, allowing you to explore live, interactive dashboards directly in your browser.
 
